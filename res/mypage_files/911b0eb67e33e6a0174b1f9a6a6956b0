@@ -1,0 +1,73 @@
+var imas = imas || {};
+imas.Voice = function () {
+	var m_audio = null;
+	var m_loadeddata = null;
+	var m_callback = null;
+
+	this.load = function (file_name) {
+		if (!file_name) return;
+
+		if (this.isA2()) {
+			console.log('android2x');
+			this.stop();
+			delete m_audio;
+			m_audio = new Audio();
+		}
+
+		if (m_audio == null) {
+			m_audio = new Audio();
+		}
+		m_audio.src = file_name;
+	};
+
+	this.play = function (callback) {
+		if (!m_audio) return;
+
+		m_loadeddata = function () {
+			m_audio.play();
+		};
+		m_callback = callback;
+
+		m_audio.addEventListener('loadeddata', m_loadeddata);
+		m_audio.load();
+
+		if (typeof callback === 'undefined')
+			callback = null;
+		if (callback !== null) {
+			m_audio.addEventListener('ended', m_callback);
+		}
+	};
+
+	this.stop = function () {
+		if (!m_audio) return;
+		this.pause();
+
+		m_audio.src = "";
+	};
+
+	this.pause = function () {
+		if (!m_audio) return;
+		m_audio.pause();
+
+		m_audio.removeEventListener('loadeddata', m_loadeddata);
+		m_audio.removeEventListener('ended', m_callback);
+	};
+
+	this.isPlaying = function () {
+		if (!m_audio)
+			return false;
+
+		return !m_audio.paused;
+	};
+
+	this.src = function () {
+		if (!m_audio)
+			return null;
+
+		return m_audio.src;
+	};
+
+	this.isA2 = function () {
+		return navigator.userAgent.indexOf("Android 2") >= 0;
+	}
+};

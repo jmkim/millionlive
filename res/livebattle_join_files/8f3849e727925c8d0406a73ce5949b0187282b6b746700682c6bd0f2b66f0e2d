@@ -1,0 +1,1441 @@
+var imas = window.imas || {};
+
+(function (imas) {
+	imas.itemSelector = function (config) {
+		var defaults = {
+			mode: false,
+			choiceButton: ".choice",
+			closeButton: "#fit-win-close"
+		};
+
+		var options = $.extend(defaults, config);
+		if (options.mode === false) {
+			return false;
+		}
+
+		var className = options.mode + 'ItemSelector';
+		if (typeof imas.itemSelector[className] === 'undefined') {
+			return false;
+		}
+
+		imas.itemSelector[className].prototype = Object.create(imas.itemSelector.ItemSelector.prototype);
+		imas.itemSelector[className].constructor = imas.itemSelector.ItemSelector;
+
+		selector = new imas.itemSelector[className]();
+
+		//アイテム選択ボタンのイベント
+		var choiceButton = $(options.choiceButton);
+		if (0 < choiceButton.size()) {
+			choiceButton.click(function () {
+				selector.selectItem(this);
+			});
+		}
+
+		//閉じるボタンのイベント
+		var fitWinCloseButton = $(options.closeButton);
+		if (0 < fitWinCloseButton.size()) {
+			fitWinCloseButton.click(function () {
+				selector.resetView();
+			});
+		}
+
+		selector.resetHiddenFrom();
+
+		return selector;
+	};
+
+
+	/**
+	 * アイテムセレクタベースオブジェクト
+	 * @constructor
+	 */
+	imas.itemSelector.ItemSelector = function () {
+		/**
+		 * アイテム選択
+		 * @param node
+		 */
+		this.selectItem = function (node) {
+			if (this.gaugeMax)
+				return;
+
+			var item = $(node);
+
+			if (item.hasClass('cannot-choice'))
+				return;
+
+			item.find('img').addClass('selected');
+			this.changeCount(item, 1);
+			this.changeGauge(item.data('effectValue'));
+			this.enableEfct();
+			this.setHiddenFrom(item.data('itemId'));
+			this.enableButton();
+			if (this.gaugeMax) {
+				this.disableChoices();
+			} else if (parseInt(item.data('effect-value'), 10) == 50) {
+				//ミニを利用した場合全回復は選択できない
+				this.disableChoice(1);//spark
+				this.disableChoice(5);//mySpark
+			}
+		};
+
+		/**
+		 * アイテム使用数をフォームにセット
+		 * @param itemId
+		 */
+		this.setHiddenFrom = function (itemId) {
+			var form = $('#item' + itemId + '-use');
+			var value = parseInt(form.val());
+			form.val(value + 1);
+		};
+
+		/**
+		 * アイテム使用数フォームをリセット
+		 */
+		this.resetHiddenFrom = function () {
+			if ($('input').hasClass('use-item-count')) {
+				$('input.use-item-count').val(0);
+			}
+		};
+
+		/**
+		 * アイテム使用数の更新
+		 * @param item
+		 * @param usedCount
+		 */
+		this.changeCount = function (item, usedCount) {
+			var itemId = item.data('itemId');
+			var itemCount = parseInt(item.attr('data-item-count'));
+			var list = $('#item-cnt' + itemId).find('.item-cnt-used').children('li');
+			var count = itemCount - usedCount;
+			if (item.data('isInfinity'))
+				count = itemCount;
+
+			$(list[0]).text('→×');
+			$(list[1]).text(count > 0 ? count : 0);
+
+			item.attr('data-item-count', count);
+
+			if (count == 0) {
+				item.removeClass('choice').addClass('cannot-choice');
+				item.children('.EfctPanel').hide();
+				var src = item.children('img').attr('src');
+				item.children('img').addClass('grayout');
+			}
+		};
+
+		/**
+		 * ビューのリセット
+		 */
+		this.resetView = function () {
+			var fit_win = $('#fit-win');
+			fit_win.children('.item-panel').find('img').removeClass('selected');
+			fit_win.children('.item-cnt').find('ul.item-cnt-used').children('li').text('');
+			this.resetGauge();
+			fit_win.find('.EfctPanel').show();
+			fit_win.find('.EfctMainBtn').hide();
+			$.each(fit_win.children('.item-panel').find('li'), function (key, node) {
+				var li = $(node);
+				var count = li.data('itemInitCount');
+				li.attr('data-item-count', count);
+				if (li.data('isUsable')) {
+					li.removeClass('cannot-choice').addClass('choice');
+					var src = li.children('img').attr('src');
+					li.children('img').removeClass('grayout');
+				}
+			});
+			this.resetHiddenFrom();
+			this.disableButton();
+			this.gaugeMax = false;
+		};
+
+		/**
+		 * すべてのアイテムを使用不可にする
+		 */
+		this.disableChoices = function () {
+			var that = this;
+			$.each($('#fit-win').children('.item-panel').find('li'), function (key, node) {
+				that.disableChoice($(node).data('item-id'));
+			});
+		};
+
+		/**
+		 * 指定したアイテムを使用不可にする
+		 * @param itemId
+		 */
+		this.disableChoice = function (itemId) {
+			itemId = parseInt(itemId, 10);
+			var item = $('#item' + itemId);
+			item.removeClass('choice').addClass('cannot-choice');
+			item.find('.EfctPanel').hide();
+			item.find('img').addClass('grayout');
+
+		};
+
+		/**
+		 * ボタンエフェクトの有無を判定してアイテムのエフェクトを切る
+		 */
+		this.enableEfct = function () {
+			if (this.addEfct()) {
+				var fit_win = $('#fit-win');
+				fit_win.find('.EfctPanel').hide();
+			}
+		}
+	};
+
+	/**
+	 * 営業用アイテムセレクタ
+	 * @constructor
+	 */
+	imas.itemSelector.EigyoItemSelector = function () {
+		imas.itemSelector.ItemSelector.apply(this);
+		this.gaugeMax = false;
+
+		/**
+		 * 営業進行するボタンの有効化
+		 */
+		this.enableButton = function () {
+			var button = $('#next-eigyo-btn');
+			var box = $('#next-eigyo-btn-box');
+			button.removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+		};
+
+		/**
+		 * 営業進行するボタンの無効化
+		 */
+		this.disableButton = function () {
+			var button = $('#next-eigyo-btn');
+			var box = $('#next-eigyo-btn-box');
+			button.removeClass('MainBtn').addClass('MainBtnOff').attr('disabled', 'disabled');
+			button.find('.btn-effect-on').hide();
+		};
+
+		/**
+		 * 元気ゲージの更新
+		 * @param effectPar
+		 */
+		this.changeGauge = function (effectPar) {
+			var bar = $('#sample-gauge');
+
+			var currentPar = parseInt(bar.attr('data-value'));
+			var maxPar = 100;
+			var hpPar = currentPar + effectPar;
+			if (hpPar >= maxPar) {
+				hpPar = maxPar;
+				this.gaugeMax = true;
+			}
+			bar.attr('data-value', hpPar);
+			this.changeHp(effectPar);
+			bar.animate({
+				width: hpPar + '%'
+			}, 'fast', 'swing');
+		};
+
+		/**
+		 * 元気ゲージのリセット
+		 */
+		this.resetGauge = function () {
+			var bar = $('#sample-gauge');
+			var initPar = bar.data('initValue');
+			bar.css({width: initPar + '%'});
+			bar.attr('data-value', initPar);
+			this.gaugeMax = false;
+			this.resetHp();
+		};
+
+		/**
+		 * 元気(数値表示)の更新
+		 * @param effectPar
+		 */
+		this.changeHp = function (effectPar) {
+			var hpCurrent = $('#hp-current');
+			var currentValue = parseInt(hpCurrent.attr('data-value'));
+			var maxValue = $('#hp-max').data('value');
+			var effectValue = maxValue / 100 * effectPar;
+			var hp = currentValue + effectValue;
+			if (hp > maxValue) {
+				hp = maxValue;
+			}
+			hpCurrent.attr('data-value', parseInt(hp, 10));
+			hpCurrent.text(parseInt(hp, 10));
+		};
+
+		/**
+		 * 元気(数値表示)のリセット
+		 */
+		this.resetHp = function () {
+			var hpCurrent = $('#hp-current');
+			var initValue = hpCurrent.data('initValue');
+			hpCurrent.text(parseInt(initValue, 10));
+			hpCurrent.attr('data-value', parseInt(initValue, 10));
+		};
+
+		/**
+		 * ボタンエフェクト処理
+		 */
+		this.addEfct = function () {
+			$(".in-popup-btn").find('.btn-effect-on').show();
+			return true;
+		};
+	};
+
+	/**
+	 * フェス用アイテムセレクタ
+	 * アイテムを使用しないBP選択も兼用
+	 * @constructor
+	 */
+	imas.itemSelector.FesItemSelector = function () {
+		imas.itemSelector.ItemSelector.apply(this);
+		this.gaugeMax = false;
+		this.useLimit = 3;
+		this.useBp = 1;
+
+		/**
+		 * 使用BP・アピールボタンの有効化
+		 */
+		this.enableButton = function (updateBpButton) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				this.useBp = bp > 3 ? 3 : bp;
+			}
+			buttons.each(function (key, node) {
+				var b = $(node).children('div');
+				for (var i = 0; i < 3; i++) {
+					var state = "b";
+					if (that.useBp === i + 1) {
+						state = "a";
+					} else if (i + 1 > bp) {
+						state = "c";
+					}
+					var button = $(b[i]);
+					if (button)
+						button.removeClass().addClass(state);
+				}
+			});
+			this.changeDamage(this.useBp);
+			if (this.useBp > 0) {
+				$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+				$('#bp').val(this.useBp);
+			}
+		};
+
+		/**
+		 * 使用BP・アピールボタンの無効化
+		 */
+		this.disableButton = function () {
+			$('.battleBtn').removeClass('MainBtn').addClass('MainBtnOff').attr('disabled', 'disabled');
+			$('.in-popup-btn').find('.effect-main').removeClass('btn-effect-on');
+			var gauge = $('#bp-current');
+			this.useBp = parseInt(gauge.attr('data-value'));
+			this.enableButton();
+		};
+
+		/**
+		 * BPゲージの更新
+		 * @param effect
+		 */
+		this.changeGauge = function (effect) {
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var bpImg = gauge.attr('class');
+			var value = bp + effect;
+			if (value >= this.useLimit) {
+				this.gaugeMax = true;
+			}
+
+			gauge.attr('class', bpImg.replace(bp, value));
+			gauge.attr('data-value', value);
+		};
+
+		/**
+		 * BPゲージのリセット
+		 */
+		this.resetGauge = function () {
+			var gauge = $('#bp-current');
+			var initBp = gauge.data('initValue');
+			var bp = parseInt(gauge.attr('data-value'));
+			this.changeGauge((bp - initBp) * -1);
+		};
+
+		/**
+		 * 予想アピール値の更新
+		 * @param bp
+		 */
+		this.changeDamage = function (bp) {
+			var base_damage = parseInt($('#ex-damage-base').val(), 10);
+			var base_attr_damage = parseInt($('#ex-attr-damage-base').val(), 10);
+			var scale = { 1: 1, 2: 2.5, 3: 4 };
+			var damage = Math.floor(base_damage * scale[bp]);
+			var attr_damage = Math.floor(base_attr_damage * scale[bp]);
+			var sum_damage = damage + attr_damage;
+			if (bp == 0) {
+				damage = 0;
+				attr_damage = 0;
+				sum_damage = 0;
+			}
+			if (bp <= 1) {
+				$('.coefficient-prefix').hide();
+			} else {
+				$('.coefficient-prefix').show();
+			}
+
+			$('.coefficient').text(scale[bp]);
+			$('.ex-damage').each(function (key, node) {
+				$(node).text(damage);
+			});
+			$('.ex-attr-damage').each(function (key, node) {
+				$(node).text(attr_damage);
+			});
+
+			$('.sum-damage').each(function (key, node) {
+				$(node).text(imas.Util.numberFormat(sum_damage));
+			});
+
+			if(this.afterChangeDamage !== undefined){
+				this.afterChangeDamage(bp);
+			}
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 */
+		this.selectBp = function (bp) {
+			if (bp > 3) {
+				bp = 3;
+			}
+			this.useBp = bp;
+			this.enableButton(false);
+			this.changeDamage(this.useBp);
+			$('#bp').val(this.useBp);
+		};
+
+		/**
+		 * ボタンエフェクト処理
+		 */
+		this.addEfct = function () {
+			var bp = $('#bp-current').attr('data-value');
+			if (bp >= 3) {
+				$('.in-popup-btn').find('.effect-main').addClass('btn-effect-on');
+				return true;
+			} else {
+				return false;
+			}
+		};
+
+	};
+
+	/**
+	 * レイドフェス用アイテムセレクタ
+	 * アイテムを使用しないBP選択も兼用
+	 * @constructor
+	 */
+	imas.itemSelector.RaidFesItemSelector = function () {
+		imas.itemSelector.FesItemSelector.apply(this);
+
+		this.isExistBpZero = ($(".bp-button-0").length > 0);
+
+		/**
+		 * 使用BP・アピールボタンの有効化
+		 */
+		this.enableButton = function (updateBpButton) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				this.useBp = bp > 3 ? 3 : bp;
+			}
+			buttons.each(function (key, node) {
+				var b = $(node).children('div');
+
+				if (that.isExistBpZero) {
+					var state = "b";
+					if (that.useBp === 0) {
+						state = "a";
+					}
+					$(b[0]).removeClass("a b c").addClass(state);
+				}
+
+				for (var i = 0; i < 3; i++) {
+					var state = "b";
+					if (that.useBp === i + 1) {
+						state = "a";
+					} else if (i + 1 > bp) {
+						state = "c";
+					}
+					var button = $(b[(that.isExistBpZero) ? i + 1 : i]);
+					if (button)
+						button.removeClass().addClass(state);
+				}
+			});
+			this.changeDamage(this.useBp);
+			if (this.useBp > 0 || this.isExistBpZero) {
+				$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+				$('#bp').val(this.useBp);
+			}
+		};
+
+		/**
+		 * 使用BP・アピールボタンの無効化
+		 */
+		this.disableButton = function () {
+			$('.battleBtn').removeClass('MainBtn').addClass('MainBtnOff').attr('disabled', 'disabled');
+			$('.in-popup-btn').find('.effect-main').removeClass('btn-effect-on');
+
+			this.selectBp($('#bp-current').data('init-value'), true);
+		};
+
+		/**
+		 * 予想アピール値の更新
+		 * @param bp
+		 */
+		this.changeDamage = function (bp) {
+			var base_damage = parseInt($('#ex-damage-base').val(), 10);
+			var base_attr_damage = parseInt($('#ex-attr-damage-base').val(), 10);
+			var scale = { 0: 0.5, 1: 1, 2: 2.5, 3: 4 };
+			var scale_text = { 0: '1/2', 1: '', 2: '2.5倍', 3: '4倍' };
+			var damage = Math.floor(base_damage * scale[bp]);
+			var attr_damage = Math.floor(base_attr_damage * scale[bp]);
+			var sum_damage = damage + attr_damage;
+
+			var scale_text_id = bp;
+			var scale_text_id_default = 1;
+
+			if (bp == 0 && !this.isExistBpZero) {
+				damage = 0;
+				attr_damage = 0;
+				sum_damage = 0;
+				scale_text_id = scale_text_id_default;
+			}
+			if (bp == 1) {
+				$('.coefficient-prefix').hide();
+			} else {
+				$('.coefficient-prefix').show();
+			}
+
+			$('.coefficient-prefix').text(scale_text[scale_text_id]);
+			$('.ex-damage').each(function (key, node) {
+				$(node).text(damage);
+			});
+			$('.ex-attr-damage').each(function (key, node) {
+				$(node).text(attr_damage);
+			});
+
+			$('.sum-damage').each(function (key, node) {
+				$(node).text(sum_damage);
+			});
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 */
+		this.selectBp = function (bp, isReady) {
+			isReady = isReady || false;
+
+			if (this.isExistBpZero && isReady) {
+				bp = 0;
+			} else if (bp > 3) {
+				bp = 3;
+			}
+
+			this.useBp = bp;
+			this.enableButton(false);
+			$('#bp').val(this.useBp);
+		};
+	};
+
+	/**
+	 * オーディションバトル用アイテムセレクタ
+	 * @constructor
+	 */
+	imas.itemSelector.BattleItemSelector = function () {
+		imas.itemSelector.ItemSelector.apply(this);
+		this.gaugeMax = false;
+		this.useLimit = 1;
+		this.useBp = 1;
+
+		/**
+		 * バトル開始ボタンの有効化
+		 */
+		this.enableButton = function () {
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			if (this.useBp > 0)
+				$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+		};
+
+		/**
+		 * バトル開始ボタンの無効化
+		 */
+		this.disableButton = function () {
+			button = $('.battleBtn');
+			button.removeClass('MainBtn').addClass('MainBtnOff').attr('disabled', 'disabled');
+			button.find('.btn-effect-on').hide();
+		};
+
+		/**
+		 * BPゲージの更新
+		 * @param effect
+		 */
+		this.changeGauge = function (effect) {
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var bpImg = gauge.attr('class');
+			var value = bp + effect;
+			if (value >= this.useLimit) {
+				this.gaugeMax = true;
+			}
+			gauge.attr('class', bpImg.replace(bp, value));
+			gauge.attr('data-value', value);
+		};
+
+		/**
+		 * BPゲージのリセット
+		 */
+		this.resetGauge = function () {
+			var gauge = $('#bp-current');
+			var initBp = gauge.data('initValue');
+			var bp = parseInt(gauge.attr('data-value'));
+			this.changeGauge((bp - initBp) * -1);
+		};
+
+		/**
+		 * ボタンエフェクト処理
+		 */
+		this.addEfct = function () {
+			var bp = $('#bp-current').attr('data-value');
+			if (bp >= 1) {
+				$('.in-popup-btn').find('.btn-effect-on').show();
+				return true;
+			} else {
+				return false;
+			}
+		};
+	};
+
+	imas.itemSelector.EventBattleItemSelector = function () {
+		imas.itemSelector.FesItemSelector.apply(this);
+		/**
+		 * 使用ボタンの有効化
+		 * @param updateBpButton
+		 * @param isInitParam
+		 */
+		this.enableButton = function (updateBpButton, isInitParam) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				this.useBp = bp > 3 ? 3 : bp;
+			}
+
+			if (!isInitParam) {
+				buttons.each(function (key, node) {
+					var b = $(node).children('div');
+					for (var i = 0; i < 4; i++) {
+						var state = "b";
+						if (that.useBp === i) {
+							state = "a";
+						} else if (i > bp) {
+							state = "c";
+						}
+						var button = $(b[i]);
+						if (button)
+							button.removeClass().addClass(state);
+					}
+				});
+			}
+
+			this.changeDamage(this.useBp, isInitParam);
+			if (!isInitParam) {
+				$('#bp').val(this.useBp);
+			}
+			$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+		};
+
+		/*
+		 ** ゲージのリセット
+		 */
+		this.resetGauge = function () {
+			var gauge = $('#bp-current');
+			var initBp = gauge.data('initValue');
+			var bp = parseInt(gauge.attr('data-value'));
+			this.changeGauge((bp - initBp) * -1);
+
+		};
+
+		/**
+		 * ダメージの更新
+		 * @param bp
+		 * @param isInitParam
+		 */
+		this.changeDamage = function (bp, isInitParam) {
+			var base_damage = parseInt($('#user-ap-dp').val(), 10);
+			var enemy_damage = parseInt($('#enemy-sum-damage').data('enemyDamage'), 10);
+			var scale = { 0: 1, 1: 1.5, 2: 1.8, 3: 2 };
+			var bpUse = '';
+			var text = '';
+			var textColor = '';
+
+			if (isInitParam) {
+				bpUse = scale[0];
+			} else {
+				bpUse = scale[bp];
+			}
+
+
+			var damage = Math.floor(base_damage * bpUse);
+
+			if (!isInitParam) {
+
+				$('.coefficient-prefix').show();
+
+				if (this.useBp === 0) {
+					text = '消費なしで';
+				} else {
+					text = this.useBp + '消費して'
+				}
+
+				$('.coefficient').text(text);
+				this.changeCompetitive(bpUse, isInitParam);
+				//this.setEventPoint(bpUse);
+			}
+
+			if (damage >= enemy_damage) {
+				textColor = 'txt-sub3';
+			} else {
+				textColor = 'txt-emph';
+			}
+
+			$('.sum-damage').each(function (key, node) {
+				$(node).removeClass(function (index, css) {
+					return (css.match(/\btxt-\S+/g) || []).join(' ');
+				}).addClass(textColor).text(damage);
+			});
+		};
+
+		/**
+		 *  発揮値、イベントポイントの倍率更新
+		 * @param scale
+		 * @param isInitParam
+		 */
+
+		this.changeCompetitive = function (scale, isInitParam) {
+			var competitive = $('#competitive');
+
+			if (!isInitParam) {
+				competitive.find('.inner-competitive').text(scale);
+			} else {
+				competitive.find('.inner-competitive').text('1');
+			}
+
+		};
+
+		/**
+		 * BPゲージの更新
+		 * @param effect
+		 */
+		this.changeGauge = function (effect) {
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var bpImg = gauge.attr('class');
+			var value = bp + effect;
+			if (value >= this.useLimit) {
+				this.gaugeMax = true;
+			}
+			gauge.attr('class', bpImg.replace(bp, value));
+			gauge.attr('data-value', value);
+		};
+
+		/**
+		 * イベントポイントの更新
+		 * @param scale
+		 */
+
+		this.setEventPoint = function (scale) {
+			var reg = /(\d+)(\D+)/;
+			var eventPoint = $('.js-get-event-point');
+			var getPoint = function () {
+				var point = reg.exec(eventPoint.data('getPoint'));
+
+				return {
+					number: point[1],
+					pointName: point[2]
+				}
+			}();
+			var attrPoint = Math.floor(getPoint.number * scale);
+
+			eventPoint.text(attrPoint + getPoint.pointName);
+
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 * @param isInitParam
+		 */
+		this.selectBp = function (bp, isInitParam) {
+			if (bp > 3) {
+				bp = 3;
+			}
+			this.useBp = bp;
+			this.changeDamage(this.useBp, isInitParam);
+			if (!isInitParam) {
+				this.enableButton(false);
+				$('#bp').val(this.useBp);
+			}
+		};
+
+	};
+
+	imas.itemSelector.EventResultItemSelector = function () {
+		imas.itemSelector.FesItemSelector.apply(this);
+
+		this.useLimit = 1;
+		this.eigyoUrl = $('#next-eigyo').attr('action');
+		this.useItemUrl = $('#escape').attr('action');
+
+		/**
+		 * 使用BP・アピールボタンの有効化
+		 */
+		this.enableButton = function (updateBpButton) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				this.useBp = bp > 1 ? 1 : bp;
+			}
+			buttons.each(function (key, node) {
+				var b = $(node).children('div');
+				for (var i = 0; i < 2; i++) {
+					var state = "b";
+					if (that.useBp === i) {
+						state = "a";
+					} else if (i > bp) {
+						state = "c";
+					}
+					var button = $(b[i]);
+					if (button)
+						button.removeClass().addClass(state);
+				}
+			});
+
+			this.changeText();
+
+			this.changeUrl();
+
+			$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+			$('#bp').val(this.useBp);
+		};
+
+		this.changeUrl = function () {
+			if (this.useBp === 0) {
+				$('#escape').attr('action', this.eigyoUrl);
+			} else {
+				$('#escape').attr('action', this.useItemUrl);
+			}
+		};
+
+
+		this.changeText = function () {
+			var text = '';
+			if (this.useBp === 0) {
+				text = '連勝数を維持しないで続行'
+			} else {
+				text = '連勝数を維持して続行'
+			}
+
+			$('.coefficient').text(text);
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 */
+		this.selectBp = function (bp) {
+			if (bp > 1) {
+				bp = 1;
+			}
+			this.useBp = bp;
+			this.enableButton(false);
+			$('#bp').val(this.useBp);
+		};
+
+
+	};
+
+	imas.itemSelector.PvpItemSelector = function () {
+		imas.itemSelector.FesItemSelector.apply(this);
+		this.useLimit = 5;
+		this.scale = { 0: 0, 1: 1, 2: 1.5, 3: 2, 4: 2.5, 5: 3 };
+		this.eventItemId = 0;
+
+		/**
+		 * アイテム選択
+		 * @param node
+		 */
+		this.selectItem = function (node) {
+
+            // BPが満タンの場合
+			if (this.gaugeMax) {
+                return;
+            }
+
+			var item = $(node);
+			if (item.hasClass('cannot-choice')) {
+                return;
+            }
+
+			item.find('img').addClass('selected');
+
+            this.changeCount(item, 1);
+			this.changeGauge(item.data('effectValue'));
+			this.enableEfct();
+			this.setHiddenFrom(item.data('itemId'));
+			this.enableButton();
+			if (this.gaugeMax) {
+				this.disableChoices();
+			}
+		};
+
+        /**
+         * BPゲージの更新
+         * @param effect
+         */
+        this.changeGauge = function (effect) {
+            var gauge = $('#bp-current');
+            var bp = parseInt(gauge.attr('data-value'));
+            var bpImg = gauge.attr('class');
+            var value = bp + effect;
+            if (value >= this.useLimit) {
+                this.gaugeMax = true;
+                var overBp = value - this.useLimit;
+	            gauge.attr('data-over', overBp);
+                if(overBp == 2) {
+                    $('#bp1_lock').show();
+                }
+                value = this.useLimit;
+            }
+
+            gauge.attr('class', bpImg.replace(bp, value));
+            gauge.attr('data-value', value);
+        };
+
+		/**
+		 * ビューのリセット
+		 */
+		this.resetView = function () {
+			var gauge = $('#bp-current'),
+				fit_win = $('#fit-win'),
+				initBp = $('#bp-current').data('initValue');
+			fit_win.children('.item-panel').find('img').removeClass('selected');
+			fit_win.children('.item-cnt').find('ul.item-cnt-used').children('li').text('');
+			this.resetGauge();
+			var that = this;
+			gauge.attr('data-over', 'default');
+            $('#bp1_lock').hide();
+
+            fit_win.find('.EfctMainBtn').hide();
+			$.each(fit_win.children('.item-panel').find('li'), function (key, node) {
+				var li = $(node);
+				var count = li.data('itemInitCount');
+				var itemId = li.data('itemId');
+				li.attr('data-item-count', count);
+				if (li.data('isUsable')) {
+					if ((initBp < 5 && (itemId == 3 || itemId == 7)) || (itemId == 8 || itemId == that.eventItemId)) {
+						li.find('.EfctPanel').show();
+						li.removeClass('cannot-choice').addClass('choice');
+						var src = li.children('img').attr('src');
+						li.children('img').removeClass('grayout');
+					}
+				}
+			});
+			this.resetHiddenFrom();
+			this.disableButton();
+			this.gaugeMax = false;
+		};
+
+		/**
+		 * 使用BP・アピールボタンの無効化
+		 */
+		this.disableButton = function () {
+			$('.battleBtn').removeClass('MainBtn').addClass('MainBtnOff').attr('disabled', 'disabled');
+			var gauge = $('#bp-current');
+			this.useBp = parseInt(gauge.attr('data-value'));
+			this.enableButton();
+		};
+
+		/**
+		 * 使用BP・アピールボタンの有効化
+		 */
+		this.enableButton = function (updateBpButton) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				this.useBp = bp;
+			}
+			buttons.each(function (key, node) {
+				var b = $(node).children('div');
+				for (var i = 0; i < 5; i++) {
+					var state = "b";
+					if (that.useBp === i + 1) {
+						state = "a";
+					} else if (i + 1 > bp) {
+						state = "c";
+					}
+					var button = $(b[i]);
+					if (button)
+						button.removeClass().addClass(state);
+				}
+			});
+			this.changeDamage(this.useBp);
+			if (this.useBp > 0) {
+				$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+				$('#bp').val(this.useBp);
+			}
+		};
+
+		/**
+		 * ダメージの更新
+		 * @param bp
+		 */
+		this.changeDamage = function (bp) {
+			var base_damage = parseInt($('#user-ap-dp').val(), 10);
+			var enemy_damage = parseInt($('#enemy-sum-damage').data('enemyDamage'), 10);
+			var textColor = '';
+			var damage = Math.floor(base_damage * this.scale[bp]);
+
+			if (bp <= 1 && this.scale[bp] <= 1) {
+				$('.coefficient-prefix').hide();
+			} else {
+				$('.coefficient-prefix').show();
+			}
+
+			$('.coefficient').text(this.scale[bp]);
+
+			if (damage >= enemy_damage) {
+				textColor = 'txt-sub3';
+			} else {
+				textColor = 'txt-emph';
+			}
+
+			$('.sum-damage').each(function (key, node) {
+				$(node).removeClass(function (index, css) {
+					return (css.match(/\btxt-\S+/g) || []).join(' ');
+				}).addClass(textColor).text(damage);
+			});
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 */
+		this.selectBp = function (bp) {
+
+            if ($('#bp-current').attr('data-over') == "2" && bp == 1) {
+                return;
+            }
+
+			this.useBp = bp;
+			this.enableButton(false);
+			this.changeDamage(this.useBp);
+
+			$('#bp').val(this.useBp);
+		};
+
+		/**
+		 * ボタンエフェクト処理
+		 */
+		this.addEfct = function () {
+			var bp = $('#bp-current').attr('data-value');
+			if (bp >= 5) {
+				$('.in-popup-btn').find('.bnt-effect-on').show();
+				return true;
+			} else {
+				return false;
+			}
+		};
+	};
+
+	imas.itemSelector.PlatinumStarLiveItemSelector = function () {
+		this.useBp = 0;
+		imas.itemSelector.EventBattleItemSelector.apply(this);
+
+		/**
+		 * 使用ボタンの有効化
+		 * @param updateBpButton
+		 * @param isInitParam
+		 */
+		this.enableButton = function (updateBpButton, isInitParam) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				if (3 < bp && bp != 15 && bp != 75) {
+					this.useBp = 3;
+				} else {
+					this.useBp = bp;
+				}
+			}
+
+			if (!isInitParam) {
+				buttons.each(function (key, node) {
+					var b = $(node).children('div');
+					for (var i = 0; i < 6; i++) {
+						iNo = i;
+						if (i == 4) {
+							iNo = 15;
+						} else if(i == 5) {
+							iNo = 75;
+						}
+						var state = "b";
+						if (that.useBp === iNo) {
+							state = "a";
+						} else if (iNo > bp && iNo != 15 && iNo != 75) {
+							state = "c";
+						}
+						var button = $(b[i]);
+						if (button) {
+							if (iNo == 15 && button.hasClass("c")) {
+								continue;
+							} else if(iNo == 75 && button.hasClass("c")) {
+								continue;
+							}
+							button.removeClass().addClass(state);
+						}
+					}
+				});
+			}
+
+			this.changeDamage(this.useBp, isInitParam);
+			if (!isInitParam) {
+				$('#bp').val(this.useBp);
+			}
+			$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+		};
+
+		/**
+		 * アイテム選択
+		 * @param node
+		 */
+		this.selectItem = function (node) {
+			if (this.gaugeMax)
+				return;
+
+			var item = $(node);
+
+			if (item.hasClass('cannot-choice'))
+				return;
+
+			item.find('img').addClass('selected');
+			this.changeCount(item, 1);
+			this.changeGauge(item.data('effectValue'));
+			this.enableEfct();
+			this.setHiddenFrom(item.data('itemId'));
+			this.enableButton();
+			if (this.gaugeMax) {
+				this.disableChoices();
+			} else if (parseInt($('#bp-current').attr('data-value'), 10) > 2) {
+				//BPが３を超えた場合はバトルキャンディ、マイバトルキャンディは選択できない
+				this.disableChoice(3);//バトルキャンディ
+				this.disableChoice(7);//マイバトルキャンディ
+			}
+		};
+
+		/**
+		 * ダメージの更新
+		 * @param bp
+		 */
+		this.changeDamage = function (bp) {
+			var base_damage = parseInt($('#user-ap-dp').val(), 10);
+			var scale = { 0: 0.1, 1: 0.20, 2: 0.5, 3: 1, 15: 5, 75: 25};
+
+			var damage = Math.floor(base_damage * scale[bp]);
+
+			$('.coefficient').text((scale[bp] * 100) + "%");
+
+			$('.sum-damage').text(damage);
+			var percent = damage / 428571 * 100;
+
+			$('.event-live-performance-gauge .gauge-bar span').css('width', percent + '%');
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 * @param isInitParam
+		 */
+		this.selectBp = function (bp, isInitParam) {
+			if (bp > 3 && bp != 15 && bp != 75) {
+				bp = 3;
+			}
+			this.useBp = bp;
+			this.changeDamage(this.useBp, isInitParam);
+			if (!isInitParam) {
+				this.enableButton(false);
+				$('#bp').val(this.useBp);
+			}
+		};
+	}
+
+	imas.itemSelector.PlatinumStarLiveContinueItemSelector = function () {
+		imas.itemSelector.EventBattleItemSelector.apply(this);
+
+		this.useLimit = 3;
+
+		/**
+		 * ビューのリセット
+		 */
+		this.resetView = function () {
+			var fit_win = $('#fit-win'),
+				initBp = $('#bp-current').data('initValue');
+			fit_win.children('.item-panel').find('img').removeClass('selected');
+			fit_win.children('.item-cnt').find('ul.item-cnt-used').children('li').text('');
+			this.resetGauge();
+			fit_win.find('.EfctMainBtn').hide();
+			$.each(fit_win.children('.item-panel').find('li'), function (key, node) {
+				var li = $(node);
+				var count = li.data('itemInitCount');
+				var itemId = li.data('itemId');
+				li.attr('data-item-count', count);
+				if (li.data('isUsable')) {
+					if ((initBp < 3 && (itemId != 3 || itemId != 7)) || (itemId == 8 || itemId == 278)) {
+						li.find('.EfctPanel').show();
+						li.removeClass('cannot-choice').addClass('choice');
+						var src = li.children('img').attr('src');
+						li.children('img').removeClass('grayout');
+					}
+				}
+			});
+			//ボタン・BPリセット
+			$('#check_bp').removeClass('MainBtn').addClass('MainBtnOff').attr('disabled');
+			$('#bp').val(bp);
+			this.resetHiddenFrom();
+			this.disableButton();
+			this.gaugeMax = false;
+		};
+
+		/**
+		 * 使用BP・アピールボタンの有効化
+		 */
+		this.enableButton = function (updateBpButton) {
+			if (typeof updateBpButton == 'undefined') {
+                updateBpButton = true;
+            }
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			if (updateBpButton) {
+				this.useBp = bp;
+			}
+			buttons.each(function (key, node) {
+				var b = $(node).children('div');
+				for (var i = 0; i < 3; i++) {
+					var state = "b";
+					if (i + 1 > bp) {
+						state = "c";
+					}
+					var button = $(b[i]);
+					if (button)
+						button.removeClass().addClass(state);
+					if (bp > 0) {
+						$(b[0]).removeClass().addClass("a");
+					}
+				}
+			});
+			if (this.useBp > 0) {
+				$('#check_bp').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+				$('#bp').val(this.useBp);
+			}
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 */
+		this.selectBp = function (bp) {
+            if (bp > 3) {
+                bp = 3;
+            }
+            this.useBp = bp;
+            this.enableButton(false);
+            $('#bp').val(this.useBp);
+		};
+	};
+
+	/**
+	 * IMCE用アイテムセレクタ
+	 * アイテムを使用しないBP選択も兼用
+	 * @constructor
+	 */
+	imas.itemSelector.IMCEItemSelector = function () {
+		imas.itemSelector.ItemSelector.apply(this);
+		this.gaugeMax = false;
+		this.useLimit = 3;
+		this.useBp = 1;
+
+		/**
+		 * 使用BP・アピールボタンの有効化
+		 */
+		this.enableButton = function (updateBpButton) {
+			if (typeof updateBpButton == 'undefined')updateBpButton = true;
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var buttons = $('.bp-button');
+			var that = this;
+			if (updateBpButton) {
+				this.useBp = bp > 3 && bp != 15 ? 3 : bp;
+			}
+			buttons.each(function (key, node) {
+				var b = $(node).children('div');
+				for (var i = 0; i < 3; i++) {
+					var state = "b";
+					if (that.useBp === i + 1) {
+						state = "a";
+					} else if (i + 1 > bp) {
+						state = "c";
+					}
+					var button = $(b[i]);
+					if (button)
+						button.removeClass().addClass(state);
+				}
+				var eventItemButton = $(b[3]);
+				var eventItemState = "b";
+				var eventItemNum = $("#mastarsRingItemNum").data("value");
+				$("#mastarsRingItemNum").html(eventItemNum);
+				$("#use-masters-ring").val(0);
+				if(that.useBp === 15){
+					eventItemState = "a";
+					$("#mastarsRingItemNum").html(eventItemNum + ' → <span class="txt-emph">' + (eventItemNum - 1) + '</span>');
+					$("#use-masters-ring").val(1);
+				}
+				if (eventItemButton)
+					eventItemButton.removeClass().addClass(eventItemState);
+			});
+			this.changeDamage(this.useBp);
+			if (this.useBp > 0) {
+				$('.battleBtn').removeClass('MainBtnOff').addClass('MainBtn').removeAttr('disabled');
+				$('#bp').val(this.useBp);
+			}
+		};
+
+		/**
+		 * 使用BP・アピールボタンの無効化
+		 */
+		this.disableButton = function () {
+			$('.battleBtn').removeClass('MainBtn').addClass('MainBtnOff').attr('disabled', 'disabled');
+			$('.in-popup-btn').find('.effect-main').removeClass('btn-effect-on');
+			var gauge = $('#bp-current');
+			this.useBp = parseInt(gauge.attr('data-value'));
+			this.enableButton();
+		};
+
+		/**
+		 * BPゲージの更新
+		 * @param effect
+		 */
+		this.changeGauge = function (effect) {
+			var gauge = $('#bp-current');
+			var bp = parseInt(gauge.attr('data-value'));
+			var bpImg = gauge.attr('class');
+			var value = bp + effect;
+			if (value >= this.useLimit) {
+				this.gaugeMax = true;
+			}
+
+			gauge.attr('class', bpImg.replace(bp, value));
+			gauge.attr('data-value', value);
+		};
+
+		/**
+		 * BPゲージのリセット
+		 */
+		this.resetGauge = function () {
+			var gauge = $('#bp-current');
+			var initBp = gauge.data('initValue');
+			var bp = parseInt(gauge.attr('data-value'));
+			this.changeGauge((bp - initBp) * -1);
+		};
+
+		/**
+		 * 予想アピール値の更新
+		 * @param bp
+		 */
+		this.changeDamage = function (bp) {
+			var base_damage = parseInt($('#ex-damage-base').val(), 10);
+			var base_attr_damage = parseInt($('#ex-attr-damage-base').val(), 10);
+			var scale = { 1: 1, 2: 2.5, 3: 4, 15: 20 };
+			var damage = Math.floor(base_damage * scale[bp]);
+			var attr_damage = Math.floor(base_attr_damage * scale[bp]);
+			var sum_damage = damage + attr_damage;
+			if (bp == 0) {
+				damage = 0;
+				attr_damage = 0;
+				sum_damage = 0;
+			}
+			if (bp <= 1) {
+				$('.coefficient-prefix').hide();
+			} else {
+				$('.coefficient-prefix').show();
+			}
+
+			$('.coefficient').text(scale[bp]);
+			$('.ex-damage').each(function (key, node) {
+				$(node).text(damage);
+			});
+			$('.ex-attr-damage').each(function (key, node) {
+				$(node).text(attr_damage);
+			});
+
+			$('.sum-damage').each(function (key, node) {
+				$(node).text(imas.Util.numberFormat(sum_damage));
+			});
+
+			if(this.afterChangeDamage !== undefined){
+				this.afterChangeDamage(bp);
+			}
+		};
+
+		/**
+		 * 使用BP選択
+		 * @param bp
+		 */
+		this.selectBp = function (bp) {
+			if (bp > 3 && bp != 15) {
+				bp = 3;
+			}
+			this.useBp = bp;
+			this.enableButton(false);
+			this.changeDamage(this.useBp);
+			$('#bp').val(this.useBp);
+		};
+
+		/**
+		 * ボタンエフェクト処理
+		 */
+		this.addEfct = function () {
+			var bp = $('#bp-current').attr('data-value');
+			if (bp >= 3) {
+				$('.in-popup-btn').find('.effect-main').addClass('btn-effect-on');
+				return true;
+			} else {
+				return false;
+			}
+		};
+
+	};
+})(imas);

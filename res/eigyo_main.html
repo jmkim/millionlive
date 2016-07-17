@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)http://imas.gree-apps.net/app/index.php/eigyo?from=mypage_main_button -->
+<html lang="ja" style="zoom: 1;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+    <link rel="stylesheet" href="./eigyo_main_files/2a496d537c616659bdb2da9cf6b7646ae1758f68b8d92b163c3550a6713789b1" media="screen">
+
+<link rel="apple-touch-icon-precomposed" href="http://cdn.bn765.com/66b/764e6fa42f542a827f9906f3368544af8b0240ab87555553935418bdab94dc5c?ccea7c4d7810724ac3b608ccab5e6802">
+<link rel="shortcut icon" href="http://cdn.bn765.com/a2c/aa5c89f6a409ee3fea6affbdb9218df15c783ce9fa6e3da6ccdcf78f578a0380?3ab584d93f830b73b66f97dd28ba426a">
+<title>ｱｲﾄﾞﾙﾏｽﾀｰ ﾐﾘｵﾝﾗｲﾌﾞ!</title>
+	
+	<script type="text/javascript" async="" src="./eigyo_main_files/ga.js"></script><script src="./eigyo_main_files/162a8e87eeeeeb714cef7bc0eabafd0afef91934ff187d01f3ce9eefcee0ffd5"></script>
+	
+	
+	<script type="text/javascript">
+		if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+			window.addEventListener('resize', resizeHtml);
+		}
+
+		function resizeHtml() {
+			var zoomRatio = window.innerWidth / 320;
+			if (zoomRatio < 1.5) {
+				var html = document.getElementsByTagName('html')[0];
+				html.style.zoom = zoomRatio;
+			}
+		}
+
+		resizeHtml();
+
+		(function($)
+		{
+			var reg = {
+				'device': /Android/,
+				'ua'    : /Chrome\/33/,
+				'vendor': /Mobile Safari/
+			};
+
+			if(reg['device'].test(navigator.userAgent) && reg['ua'].test(navigator.userAgent) && reg['vendor'].test(navigator.userAgent) ) {
+				$('html').addClass('chrome-33');
+			}
+
+
+		})(jQuery);
+
+	</script>
+
+	<script type="text/javascript" src="./eigyo_main_files/5d237d4cec351dc4fd479ab92721909524f92af3ebd85697c540c49e9d11431a"></script>
+	<script>
+		imas.SoundVolume.init(
+			{
+				voice: "0",
+				webview_se: "",
+				webview_bgm: "",
+				webview_bgm_volume: ""
+			}
+		);
+	</script>
+	<link id="greepf_css" type="text/css" rel="stylesheet" href="./eigyo_main_files/gree_spa.css"><script charset="UTF-8" src="./eigyo_main_files/message.js"></script></head>
+<body>
+<div id="gree-app-container">
+
+
+
+<!-- wrapper -->
+<div id="wrapper">
+	<!-- main-bg -->
+	<div class="main-bg">
+					<!-- main-menu -->
+<nav class="main-menu">
+	<ul>
+		<li><a href="http://imas.gree-apps.net/app/index.php/mypage" class="nav-my-page">マイページ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/eigyo?from=header_menu" class="nav-eigyo">営業</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/lesson" class="nav-lesson">レッスン</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/gasha" class="nav-gasha">ガシャ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/event" class="nav-event">イベント</a></li>
+		<li id="toggle-btn"><a class="hoverable popup-menu">メニュー</a></li>
+	</ul>
+</nav>
+
+
+<!-- /main-menu -->
+
+	<!-- slide-menu -->
+					<div id="slide-menu">
+															<div class="menu-banner">
+					
+
+	
+	<div class="banner-area">
+					<img src="./eigyo_main_files/117ba0f566b7fe6634649a730f7379610a06ee347cce0d7bc7a91b505634862a" class="new-banner">
+		
+					<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2313/type/18"><img src="./eigyo_main_files/1e4492b2f9669b9684258877f3056bbded1b972ab14e52829270d2895a3b9f370ef2b50f5b2b7e04b8230f8709a2b713b54f97b9f39dd54b4e7b2f725b07875b" width="280"></a><br>
+						<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2313/type/18">
+									杏奈との絆を深めて限定SRをGET!
+							</a>
+						</div>
+
+				</div>
+							<div class="menu-area">
+			<ul>
+				<li class="menu-group">
+					<ul id="work-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/livebattle" id="g-menu-livebattle"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/ranking" id="g-menu-ranking"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/ula" id="g-menu-ula"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="card-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/deck" id="g-menu-deck"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/cardinventory" id="g-menu-cardinventory"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/album" id="g-menu-album"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/potential_skill" id="g-menu-potential-skill"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/cardholder" id="g-menu-cardfolder"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/wantlist" id="g-menu-wantlist"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="idol-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/unit" id="g-menu-unit"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/idol" id="g-menu-idol"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/audio_room" id="g-menu-audioroom"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/convention_center" id="g-menu-convention"></a></li>
+						<li><a id="g-menu-shortstory" href="http://imas.gree-apps.net/app/index.php/short_story"></a></li>
+						<li><a id="g-menu-theater" href="http://imas.gree-apps.net/app/index.php/theater"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="item-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/present" id="g-menu-present"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/shop" id="g-menu-shop"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/item" id="g-menu-item"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/exchange" id="g-menu-exchange"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="friend-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/friend" id="g-menu-friend"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/mypage/mydata" id="g-menu-mydata"></a></li>
+													<li><a href="http://imas.gree-apps.net/app/index.php/invite" id="g-menu-invite"></a></li>
+												<li><a href="http://imas.gree-apps.net/app/index.php/lounge" id="g-menu-lounge"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/trade" id="g-menu-trade"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/bazaar" id="g-menu-bazaar"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="other-menu-caption" class="menu-caption">
+						<li>
+															<a href="http://pf.gree.net/58737" target="_top" id="g-menu-toppage"></a>
+													</li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/help" id="g-menu-help"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/title" id="g-menu-title"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/memories" id="g-menu-memories"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/voice_drama/top" id="g-menu-voice"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/config" id="g-menu-setting"></a></li>
+					</ul>
+				</li>
+			</ul>
+			<!--
+		<div id="work-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+							<a href="http://imas.gree-apps.net/app/index.php/fes" id="g-menu-fes"></a>
+						<a href="http://imas.gree-apps.net/app/index.php/auditionbattle" id="g-menu-auditionbattle"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/ranking" id="g-menu-ranking"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="card-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/deck" id="g-menu-deck"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/cardinventory" id="g-menu-cardinventory"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/album" id="g-menu-album"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="idol-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/unit" id="g-menu-unit"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/idol" id="g-menu-idol"></a>
+			
+		</div>
+		<div class="line-s2"></div>
+		<div id="item-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/present" id="g-menu-present"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/shop" id="g-menu-shop"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/item" id="g-menu-item"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="friend-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/friend" id="g-menu-friend"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/mypage/mydata" id="g-menu-mydata"></a>
+							<a href="http://imas.gree-apps.net/app/index.php/invite" id="g-menu-invite"></a>
+						<a href="http://imas.gree-apps.net/app/index.php/lounge" id="g-menu-lounge"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/trade" id="g-menu-trade"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="other-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+							<a href="http://pf.gree.net/58737" target="_top" id="g-menu-toppage"></a>
+						<a href="http://imas.gree-apps.net/app/index.php/help" id="g-menu-help"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/title" id="g-menu-title"></a>
+		</div>
+-->
+		</div>
+	</div>
+
+
+	<!-- slide-menu -->
+	<script type="text/javascript">
+		var flag = false;
+		document.getElementById("toggle-btn").addEventListener("click", function () {
+			flag = !flag;
+			if (flag) {
+				document.getElementById("slide-menu").className = "open";
+			} else {
+				document.getElementById("slide-menu").className = "";
+			}
+		});
+	</script>
+
+
+		
+
+	<div class="heading cap-01">名古屋</div>
+<div class="dark-bg">
+										<img src="./eigyo_main_files/c385540dc008679b880039598a869cf06515852bed8d01e2189e6a0c01e54cda" width="320px" height="100px">
+								
+	
+    
+	
+	
+	
+	<table width="100%" style="padding:8px 8px 8px 22px;">
+	<tbody>
+	<tr>
+		<td align="left" width="170px" height="24px"><span class="txt-sub2">元気&nbsp;</span><!--
+				-->217/360</td>
+		<td align="left" width="190px"><span class="txt-sub2">経験値&nbsp;</span>7757/9999</td>
+	</tr>
+	<tr>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="eng" style="width:60%"></div>
+			</div>
+		</td>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="exp" style="width:77%"></div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td align="left" colspan="2">
+						<span class="txt-sub2">カード&nbsp;</span>
+			<span class="">78</span>/135
+			<br>
+					</td>
+	</tr>
+	</tbody>
+</table>
+	<div id="link-fes" class="main-mode-btn main-mode-large box-center pb">
+	<a href="http://imas.gree-apps.net/app/index.php/livebattle" class="eigyo-btn-livebattle"><img height="24" class="blink"></a>
+</div>
+<input type="hidden" id="js-livebattle-check" data-url="http://imas.gree-apps.net/app/index.php/api/livebattle" data-target-class="eigyo-btn-livebattle">
+
+	
+						
+
+	
+	<div class="banner-area">
+					<img src="./eigyo_main_files/117ba0f566b7fe6634649a730f7379610a06ee347cce0d7bc7a91b505634862a" class="new-banner">
+		
+					<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2313/type/8"><img src="./eigyo_main_files/1e4492b2f9669b9684258877f3056bbded1b972ab14e52829270d2895a3b9f370ef2b50f5b2b7e04b8230f8709a2b713b54f97b9f39dd54b4e7b2f725b07875b" width="280"></a><br>
+						<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2313/type/8">
+									杏奈との絆を深めて限定SRをGET!
+							</a>
+						</div>
+
+					
+
+	
+	<div class="banner-area">
+		
+					<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2157/type/8"><img src="./eigyo_main_files/1e4492b2f9669b9684258877f3056bbded1b972ab14e52829270d2895a3b9f37ad4bb12160d43be8b2a06aa05902340dfe1eb1945981ef80a439a2af3ef2fad5" width="280"></a><br>
+						<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2157/type/8">
+									ライブくじはこちら
+							</a>
+						</div>
+
+			</div>
+				<div class="heading cap-02">スタジオで音声収録 5/5</div>
+		<div class="list-bg">
+		<div class="CenterBtn">
+			<div class="MainBtn">
+				<a href="http://imas.gree-apps.net/app/index.php/eigyo/progress/371/85"><span class="btn-effect-on effect-main"></span>営業する</a>
+			</div>
+		</div>
+        
+<script src="./eigyo_main_files/21bee41f9ae3e6f120eb391687a555d3926a6ea4bda1c18de5243577e03c9ce9"></script>
+<script type="text/javascript">
+	$(function () {
+		var form = $('#featureIdol');
+		var url = form.attr('action');
+		var areaId = form.data('areaId');
+		var wall = $('#firewall');
+		var isFeaturing = form.find('.featuring').size();
+
+		if (!isFeaturing) {
+			$('.not-selected').removeClass('mask');
+		}
+
+		wall.click(function (e) {
+			e.preventDefault();
+		});
+		$('.js-choice-idol').click(function () {
+			var idolId = $(this).data('idolId');
+			var action = $(this).find('.featuring').size() > 0 ? 'delete' : 'set';
+			var tapAnim = $('#featureTarget').find('.feature-tap-anim');
+			var self = this;
+			if (tapAnim.size() > 0) {
+				tapAnim.removeClass('feature-tap-anim');
+			}
+
+			$(self).addClass('feature-tap-anim');
+
+			wall.show();
+
+			$.post(url, { action: action, areaId: areaId, idolId: idolId},function (data) {
+				if ($('.featuring').size() > 0) {
+					$('.featuring').addClass('not-selected mask').removeClass('featuring');
+				} else {
+					$('.not-selected').addClass('mask');
+				}
+
+				if (data.mst_idol_id !== null) {
+					$(self).find('.not-selected').remove();
+					$(self).append('<div class="featuring"></div>');
+
+					$('.feature-idol-name').text(data.idol_name);
+					var href = $('#js-archive-link').attr('href');
+					console.log(href);
+					href = href.replace(/\/idol\/\d+/, '/idol/' + data.mst_idol_id);
+					console.log(href);
+					$('#js-archive-link').attr('href', href);
+					renderFeaturingCount(data);
+					$('#featuring-archive-info').show();
+				} else {
+					$('.feature-idol-name').text("未設定");
+					resetFeaturingCount();
+					$('.not-selected').removeClass('mask');
+					$('#featuring-archive-info').hide();
+				}
+			}).done(function () {
+				$(self).bind('webkitAnimationEnd', function () {
+					$(self).removeClass('feature-tap-anim');
+				});
+				wall.hide();
+			}).fail();
+		});
+
+		function renderFeaturingCount(data) {
+			var idolStat = featuring_data[data.mst_idol_id];
+			console.log(idolStat);
+			$('#js-best-count').text(idolStat.read_best);
+			$('#js-best-count-all').text(idolStat.all_best);
+			$('#js-good-count').text(idolStat.read_good);
+			$('#js-good-count-all').text(idolStat.all_good);
+		}
+
+		function resetFeaturingCount() {
+			$('#js-best-count').text(0);
+			$('#js-best-count-all').text(0);
+			$('#js-good-count').text(0);
+			$('#js-good-count-all').text(0);
+		}
+
+		$('.feature-ex').on('click', function(){
+			var template = _.template($('#js-feature-ex').text());
+			$('.dialog-placeholder').html(template());
+			$('#dialog').addClass('is-show');
+			$('body').addClass('dialog-open').append('<div class="overlay overlay-black"></div>');
+		});
+
+		$('.dialog-close').on('click', function(){
+			$('#dialog').removeClass('is-show');
+			$('body').removeClass('dialog-open');
+			$('.overlay').remove();
+		});
+
+	});
+</script>
+
+<script>
+	var featuring_data = {
+		}
+</script>
+
+<script type="text/html" id="js-feature-ex">
+	<div class="large-img back">
+		<div class="pd-all txt-left">
+			<p class="mb txt-sub2"><span class="font-large">■</span>フィーチャリングアイドル指定とは？</p>
+			<p class="mb font-small">アイコン画像を選択すると、アイドルを1人指定できます。指定されたアイドルは、必ずアイドルフィーチャリングのセンターに登場します</p>
+			<p class="mb font-small">指定したアイドルを再度選択すると、指定アイドルから解除されます</p>
+			<p class="mb font-small">※各イベント専用エリア毎に指定できるアイドルは異なります</p>
+			<p class="mb txt-sub2"><span class="font-large">■</span>アーカイブ機能とは？</p>
+			<p class="mb font-small"> 「演出を見る」ボタンを押すと、アイドルフィーチャリングで閲覧した事がある「ベストチョイス」「グッドチョイス」の演出を再生できる機能です。 </p>
+		</div>
+	</div>
+</script>
+
+		<table width="100%" style="padding:8px 36px;">
+	<tbody>
+	<tr>
+		<td align="left" width="124px"><span class="txt-sub2">達成度 </span>85%</td>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="awn" style="width:85%"></div>
+			</div>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<table width="100%" style="padding:8px 36px;margin-top:-13px">
+	<tbody>
+	<tr>
+		<td align="left"><span class="txt-sub2">経験値 </span><span class="txt-sub3">+24</span></td>
+		<td align="left" style="padding-left: 7px"><span class="txt-sub2">マニー </span><span class="txt-sub3">+240</span></td>
+		<td align="left" colspan="2"><span class="txt-sub2">元気 </span><span class="txt-emph">-12</span></td>
+	</tr>
+	</tbody>
+</table>
+
+	<table width="100%" style="padding:0 36px 8px 36px;">
+		<tbody>
+		<tr>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3a811d09753ce87152912295840f71308" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3381c4ab20070e4ed5ae10a803d925f70" width="56px" height="70px"></td>
+		</tr>
+		</tbody>
+	</table>
+
+	</div>
+
+						<div class="heading cap-02">スタジオで音声収録 4/5</div>
+				<div class="list-bg">
+			<div class="CenterBtn"><div class="base-btn"><a href="http://imas.gree-apps.net/app/index.php/eigyo/progress/370/100/endless">営業する</a></div></div>
+			<table width="100%" style="padding:8px 36px;">
+	<tbody>
+	<tr>
+		<td align="left" width="124px"><span class="txt-sub2">達成度 </span>達成済</td>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="awn" style="width:100%"></div>
+			</div>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<table width="100%" style="padding:8px 36px;margin-top:-13px">
+	<tbody>
+	<tr>
+		<td align="left"><span class="txt-sub2">経験値 </span><span class="txt-sub3">+24</span></td>
+		<td align="left" style="padding-left: 7px"><span class="txt-sub2">マニー </span><span class="txt-sub3">+240</span></td>
+		<td align="left" colspan="2"><span class="txt-sub2">元気 </span><span class="txt-emph">-12</span></td>
+	</tr>
+	</tbody>
+</table>
+
+	<table width="100%" style="padding:0 36px 8px 36px;">
+		<tbody>
+		<tr>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3c36fdb30b739230804cf25bddfc748ec" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+		</tr>
+		</tbody>
+	</table>
+
+		</div>
+						<div class="heading cap-02">スタジオで音声収録 3/5</div>
+				<div class="list-bg">
+			<div class="CenterBtn"><div class="base-btn"><a href="http://imas.gree-apps.net/app/index.php/eigyo/progress/369/100/endless">営業する</a></div></div>
+			<table width="100%" style="padding:8px 36px;">
+	<tbody>
+	<tr>
+		<td align="left" width="124px"><span class="txt-sub2">達成度 </span>達成済</td>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="awn" style="width:100%"></div>
+			</div>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<table width="100%" style="padding:8px 36px;margin-top:-13px">
+	<tbody>
+	<tr>
+		<td align="left"><span class="txt-sub2">経験値 </span><span class="txt-sub3">+24</span></td>
+		<td align="left" style="padding-left: 7px"><span class="txt-sub2">マニー </span><span class="txt-sub3">+240</span></td>
+		<td align="left" colspan="2"><span class="txt-sub2">元気 </span><span class="txt-emph">-12</span></td>
+	</tr>
+	</tbody>
+</table>
+
+	<table width="100%" style="padding:0 36px 8px 36px;">
+		<tbody>
+		<tr>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e39f8feda3e0b9dfb07cb9274596bd89a0" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3931670b812d2f4ff998a6fc63ce33c4d" width="56px" height="70px"></td>
+		</tr>
+		</tbody>
+	</table>
+
+		</div>
+						<div class="heading cap-02">スタジオで音声収録 2/5</div>
+				<div class="list-bg">
+			<div class="CenterBtn"><div class="base-btn"><a href="http://imas.gree-apps.net/app/index.php/eigyo/progress/368/100/endless">営業する</a></div></div>
+			<table width="100%" style="padding:8px 36px;">
+	<tbody>
+	<tr>
+		<td align="left" width="124px"><span class="txt-sub2">達成度 </span>達成済</td>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="awn" style="width:100%"></div>
+			</div>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<table width="100%" style="padding:8px 36px;margin-top:-13px">
+	<tbody>
+	<tr>
+		<td align="left"><span class="txt-sub2">経験値 </span><span class="txt-sub3">+24</span></td>
+		<td align="left" style="padding-left: 7px"><span class="txt-sub2">マニー </span><span class="txt-sub3">+240</span></td>
+		<td align="left" colspan="2"><span class="txt-sub2">元気 </span><span class="txt-emph">-12</span></td>
+	</tr>
+	</tbody>
+</table>
+
+	<table width="100%" style="padding:0 36px 8px 36px;">
+		<tbody>
+		<tr>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e37bb33cb0588ebaed84ba86106f9a9791" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+		</tr>
+		</tbody>
+	</table>
+
+		</div>
+						<div class="heading cap-02">スタジオで音声収録 1/5</div>
+				<div class="list-bg">
+			<div class="CenterBtn"><div class="base-btn"><a href="http://imas.gree-apps.net/app/index.php/eigyo/progress/367/100/endless">営業する</a></div></div>
+			<table width="100%" style="padding:8px 36px;">
+	<tbody>
+	<tr>
+		<td align="left" width="124px"><span class="txt-sub2">達成度 </span>達成済</td>
+		<td align="left">
+			<div class="gauge size1">
+				<div class="awn" style="width:100%"></div>
+			</div>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<table width="100%" style="padding:8px 36px;margin-top:-13px">
+	<tbody>
+	<tr>
+		<td align="left"><span class="txt-sub2">経験値 </span><span class="txt-sub3">+24</span></td>
+		<td align="left" style="padding-left: 7px"><span class="txt-sub2">マニー </span><span class="txt-sub3">+240</span></td>
+		<td align="left" colspan="2"><span class="txt-sub2">元気 </span><span class="txt-emph">-12</span></td>
+	</tr>
+	</tbody>
+</table>
+
+	<table width="100%" style="padding:0 36px 8px 36px;">
+		<tbody>
+		<tr>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3bb28e5d58aad7725f69ada5a31674fa4" width="56px" height="70px"></td>
+			<td align="center" valign="bottom"><img src="./eigyo_main_files/7f2e4dbae63583e29bd2b48f8b9a84e3b326dd9c81006a33140f6bfa3533c7b7" width="56px" height="70px"></td>
+		</tr>
+		</tbody>
+	</table>
+
+		</div>
+		<div class="line-s1"></div>
+<ul class="normal-bg">
+			
+		<div class="left-arrow">
+			<a href="http://imas.gree-apps.net/app/index.php/eigyo/area_works/">エリア・お仕事一覧</a>
+		</div>
+	</ul>
+
+
+
+    
+<a href="http://imas.gree-apps.net/app/index.php/eigyo?from=mypage_main_button#wrapper" class="js-mv-id mv-id mt"><img src="./eigyo_main_files/e4f71985efb653fb760fd54e204afe2513e36a37352693c1bfd329c22f494638" width="320" height="43" alt="ページTOPへ"></a>
+
+<!-- main-menu -->
+<nav class="main-menu">
+	<ul>
+		<li><a href="http://imas.gree-apps.net/app/index.php/mypage" class="nav-my-page">マイページ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/eigyo" class="nav-eigyo">営業</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/lesson" class="nav-lesson">レッスン</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/gasha" class="nav-gasha">ガシャ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/event" class="nav-event">イベント</a></li>
+					<li><a href="http://pf.gree.net/58737" target="_top" class="nav-top"></a></li>
+			</ul>
+</nav>
+<!-- /main-menu -->
+
+
+<!-- footer -->
+<footer>
+	<p><small>©窪岡俊之 ©2013 BANDAI NAMCO Entertainment Inc.<br>©BNEI／PROJECT iM@S</small></p>
+</footer>
+<!-- /footer -->
+
+<!-- debug -->
+<!-- /debug -->
+
+
+</div> <!-- /main-bg -->
+</div> <!-- wrapper -->
+</div> <!-- gree-app-container -->
+
+
+<script type="text/javascript" src="./eigyo_main_files/c97d5d8391318e2729c2feb6e8f9b82d"></script>
+
+			<script type="text/javascript" src="./eigyo_main_files/gree.min.js"></script>
+	<script type="text/javascript">
+	GREE.init({
+		app_id: '58737',
+				enableHeader: true,
+				enableFooter: true			});
+	$(document).ready(function(){
+		if (window.pageYOffset === 0) {
+			window.scrollTo(0, 1);
+		}
+	});
+</script>
+
+
+
+
+
+<script type="text/javascript" src="./eigyo_main_files/d1427b19f571e9c72220cd7119eb8e2a496375fe86925598d2ddeb72176b4215"></script>
+
+	<script type="text/javascript" src="./eigyo_main_files/948e4002ccee81b7852f51249c76dce93e8433f311d1322a8d7e1c32013bc36f"></script>
+	<script type="text/javascript">
+		if ('addEventListener' in document) {
+			document.addEventListener('DOMContentLoaded', function() {
+				FastClick.attach(document.body);
+			}, false);
+		}
+	</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	
+	var formInputClicked = false;
+	var onClickFormInput = function(){
+		//1クリック目
+		if(formInputClicked==false){
+			formInputClicked = true;
+		}
+		else{
+			$('form input[type=submit]').attr("disabled", "disabled");
+		}
+	};
+
+	</script>
+
+
+
+
+
+<div id="gree-pf-container"><div class="greepf-footer-container"><div class="_gpf-glContr _gpf-staticNavFoot"><div class="_gpf-contWrap"><div class="_gpf-contr"><div class="_gpf-unit"><div class="_gpf-cst _gpf-hasSpaceFat" id="gpf-coin"><div class="_gpf-flex" onclick="location.href=&quot;http://payment.gree.net/?from_ggpfooter=coin_58737&amp;backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Feigyo%253Ffrom%253Dmypage_main_button&quot;"><div class="_gpf-itm"><div class="_gpf-lead">GREEコインをためる</div></div><div class="_gpf-itmCaret"><span class="_gpf-spr _gpf-ia18_arw_r"></span></div></div></div><div class="_gpf-cst _gpf-hasSpaceFat" id="gpf-invite"><div class="_gpf-flex" onclick="GREE.ui({method:&quot;invite&quot;, view:&quot;invite_dialog&quot;})"><div class="_gpf-itm"><div class="_gpf-lead">GREEの友だちを誘う</div></div><div class="_gpf-itmCaret"><span class="_gpf-spr _gpf-ia18_arw_r"></span></div></div></div></div><div class="_gpf-unit _gpf-taC _gpf-space15" id="gpf-misc"><a class="_gpf-lnk _gpf-spaceR10" href="http://apps.gree.net/gd/app/info/setting/view/58737?backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Feigyo%253Ffrom%253Dmypage_main_button" id="gpf-misc-settings">アプリ設定</a><a class="_gpf-lnk _gpf-spaceR10" href="http://apps.gree.net/gd/app/info/58737?backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Feigyo%253Ffrom%253Dmypage_main_button" id="gpf-misc-help">規約・ヘルプ</a><a class="_gpf-lnk" href="http://help.gree.net/?action=app_form&amp;app_id=58737&amp;backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Feigyo%253Ffrom%253Dmypage_main_button" id="gpf-misc-contact">お問い合わせ</a></div><div class="_gpf-unit _gpf-space15"><div class="_gpf-flex" id="gpf-banner"><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/71/60471/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/60471?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/62/60462/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/60462?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/59/60759/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/60759?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/43/66243/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/66243?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/46/55446/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/55446?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div></div></div><div class="_gpf-unit _gpf-taC"><a class="_gpf-lnk" href="http://games.gree.net/?action=preopen_app_top&amp;app_id=66408&amp;from_ggpfooter=campaign_58737">人気PCゲーム!スマホで登場!10000C貰える!?</a></div><div class="_gpf-unit _gpf-taC"><a class="_gpf-lnk" href="http://games.gree.net/static/page/gekiatsufes/c2?from_ggpfooter=campaign_58737">この夏限定！お買い得情報をチェック★</a></div></div></div><div class="_gpf-navFootWrap _gpf-static"><div class="_gpf-navFoot"><div class="_gpf-contr"><div class="_gpf-flex"><div class="_gpf-itm" id="gpf-tab-top"><a class="_gpf-in" href="http://games.gree.net/?from_ggpfooter=tab_top_58737_noiframe"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_top"></span><div class="_gpf-txt">トップ</div></div></a></div><div class="_gpf-itm" id="gpf-tab-mygame"><a class="_gpf-in" href="http://games.gree.net/?action=myapp_list&amp;from_ggpfooter=tab_myapp_58737_noiframe"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_game"></span><div class="_gpf-txt">マイゲーム</div></div></a></div><div class="_gpf-itm" id="gpf-tab-search"><a class="_gpf-in" href="http://games.gree.net/search/?from_ggpfooter=tab_apps_58737_noiframe"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_search"></span><div class="_gpf-txt">ゲーム検索</div></div></a></div><div class="_gpf-itm" id="gpf-tab-chat"><a class="_gpf-in" href="http://apps.gree.net/?action=app_chat_view#view=game_list&amp;"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_chat"></span><div class="_gpf-txt">チャット</div></div></a></div><div class="_gpf-itm" id="gpf-tab-recommend"><a class="_gpf-in" href="http://apps.gree.net/66421?from_ggpfooter=gamefootermenu_58737_ann_66421_1_36770&amp;app_code=GFOME000002"><div class="_gpf-in"><div class="_gpf-ico33 _gpf-tap" style="background-image:url(http://aimg-static.gree.net/img/announce/20a170c45c9adee4aafc692e261bb614480.jpg)"></div><span class="_gpf-ntfBadge _gpf-skOrange _gpf-fsT _gpf-last">HOT</span></div></a></div></div></div></div></div></div></div></div></body><autoscroll></autoscroll></html>

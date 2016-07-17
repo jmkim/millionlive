@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://imas.gree-apps.net/app/index.php/livebattle -->
+<html lang="ja" style="zoom: 1;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+    <link rel="stylesheet" href="./livebattle_rarefes_files/2a496d537c616659bdb2da9cf6b7646ae1758f68b8d92b163c3550a6713789b1" media="screen">
+
+<link rel="apple-touch-icon-precomposed" href="http://cdn.bn765.com/66b/764e6fa42f542a827f9906f3368544af8b0240ab87555553935418bdab94dc5c?ccea7c4d7810724ac3b608ccab5e6802">
+<link rel="shortcut icon" href="http://cdn.bn765.com/a2c/aa5c89f6a409ee3fea6affbdb9218df15c783ce9fa6e3da6ccdcf78f578a0380?3ab584d93f830b73b66f97dd28ba426a">
+<title>ｱｲﾄﾞﾙﾏｽﾀｰ ﾐﾘｵﾝﾗｲﾌﾞ!</title>
+	
+	<script type="text/javascript" async="" src="./livebattle_rarefes_files/ga.js"></script><script src="./livebattle_rarefes_files/162a8e87eeeeeb714cef7bc0eabafd0afef91934ff187d01f3ce9eefcee0ffd5"></script>
+	
+	
+	<script type="text/javascript">
+		if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+			window.addEventListener('resize', resizeHtml);
+		}
+
+		function resizeHtml() {
+			var zoomRatio = window.innerWidth / 320;
+			if (zoomRatio < 1.5) {
+				var html = document.getElementsByTagName('html')[0];
+				html.style.zoom = zoomRatio;
+			}
+		}
+
+		resizeHtml();
+
+		(function($)
+		{
+			var reg = {
+				'device': /Android/,
+				'ua'    : /Chrome\/33/,
+				'vendor': /Mobile Safari/
+			};
+
+			if(reg['device'].test(navigator.userAgent) && reg['ua'].test(navigator.userAgent) && reg['vendor'].test(navigator.userAgent) ) {
+				$('html').addClass('chrome-33');
+			}
+
+
+		})(jQuery);
+
+	</script>
+
+	<script type="text/javascript" src="./livebattle_rarefes_files/5d237d4cec351dc4fd479ab92721909524f92af3ebd85697c540c49e9d11431a"></script>
+	<script>
+		imas.SoundVolume.init(
+			{
+				voice: "0",
+				webview_se: "",
+				webview_bgm: "",
+				webview_bgm_volume: ""
+			}
+		);
+	</script>
+	<style type="text/css">#livebattle {
+	min-height: 200px;
+}
+#livebattle .loader.action-loading {
+	min-height: 200px;
+	background-color: transparent;
+}
+.livebattle {
+	position: relative;
+}
+.livebattle .livebattle-section {
+	text-align: left;
+	/*border: 1px solid #fff;*/
+}
+.list-item-body-left {
+	float: left;
+}
+.livebattle-list-item-footer {
+	clear: both;
+}
+.livebattle-list-tab {
+	position: relative;
+}
+.livebattle-list-tab .livebattle-list-badge {
+	background-color: #225994;
+	color: #fff;
+	border-radius: 10px;
+	font-size: 11px;
+	padding: 0 3px;
+}
+.livebattle-list-tab.is-active .livebattle-list-badge {
+	color: #4c9cf4;
+	background-color: #fff;
+	text-shadow: none;
+}
+.livebattle-reload {
+	color: #ffffff;
+	position: absolute;
+	top: 9px;
+	right: 10px;
+	width: 28px;
+	height: 28px;
+	border-radius: 3px;
+	background-size: 28px;
+	background-repeat: no-repeat;
+	background-image: url(data:image/png;utf8;base64,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);
+}
+.livebattle-reload.loading {
+	-webkit-animation: livebattle-reload-spin 0.3s ease infinite;
+	animation: livebattle-reload-spin 0.3s ease infinite;
+}
+@-webkit-keyframes livebattle-reload-spin {
+	0% { -webkit-transform: rotate(0deg); }
+	100% { -webkit-transform: rotate(360deg); }
+}
+</style><style type="text/css">.livebattle-list-item-head {
+	position: relative;
+}
+.livebattle-badges {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.livebattle-badges-item {
+	display: inline-block;
+	float: right;
+	margin: 1px;
+}
+.livebattle-badges-item > img {
+	width: 45px;
+	height: 15px;
+}
+.livebattle-badges-item > img.none {
+	width: 15px;
+	height: 15px;
+}
+.livebattle-level {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+.livebattle-level-item {
+	display: inline-block;
+	float: left;
+}
+.livebattle-level-item > img {
+	height: 19px;
+}
+.livebattle-list-item {
+	padding: 4px;
+}
+.livebattle-list-item-body-thumbnail {
+	position: relative;
+	width: 120px;
+	height: 75px;
+	overflow: hidden;
+	float: left;
+}
+.livebattle-list-item-body-thumbnail .livebattle-thumbnail-background {
+	width: 120px;
+	height: 75px;
+}
+.livebattle-list-item-body-thumbnail .livebattle-thumbnail-chara-center {
+	position: absolute;
+	bottom: 0;
+	left: 25px;
+	width: 70px;
+	height: 70px;
+}
+.livebattle-list-item-body-thumbnail .livebattle-thumbnail-chara-left {
+	position: absolute;
+	bottom: 0;
+	left: -13px;
+	width: 70px;
+	height: 70px;
+}
+.livebattle-list-item-body-thumbnail .livebattle-thumbnail-chara-right {
+	position: absolute;
+	bottom: 0;
+	left: 62px;
+	width: 70px;
+	height: 70px;
+}
+.livebattle-list-item-body-user {
+	float: left;
+	width: 50px;
+	padding: 0 2px;
+}
+.livebattle-list-item-body-detail {
+	float: left;
+	width: 135px;
+}
+.livebattle-list-item-footer-btn {
+	display: inline-block;
+	float: right;
+}</style><link id="greepf_css" type="text/css" rel="stylesheet" href="./livebattle_rarefes_files/gree_spa.css"><script charset="UTF-8" src="./livebattle_rarefes_files/message.js"></script></head>
+<body>
+<div id="gree-app-container">
+
+
+
+<!-- wrapper -->
+<div id="wrapper">
+	<!-- main-bg -->
+	<div class="main-bg">
+					<!-- main-menu -->
+<nav class="main-menu">
+	<ul>
+		<li><a href="http://imas.gree-apps.net/app/index.php/mypage" class="nav-my-page">マイページ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/eigyo?from=header_menu" class="nav-eigyo">営業</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/lesson" class="nav-lesson">レッスン</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/gasha" class="nav-gasha">ガシャ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/event" class="nav-event">イベント</a></li>
+		<li id="toggle-btn"><a class="hoverable popup-menu">メニュー</a></li>
+	</ul>
+</nav>
+
+
+<!-- /main-menu -->
+
+	<!-- slide-menu -->
+					<div id="slide-menu">
+															<div class="menu-banner">
+					
+
+	
+	<div class="banner-area">
+					<img src="./livebattle_rarefes_files/117ba0f566b7fe6634649a730f7379610a06ee347cce0d7bc7a91b505634862a" class="new-banner">
+		
+					<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2313/type/18"><img src="./livebattle_rarefes_files/1e4492b2f9669b9684258877f3056bbded1b972ab14e52829270d2895a3b9f370ef2b50f5b2b7e04b8230f8709a2b713b54f97b9f39dd54b4e7b2f725b07875b" width="280"></a><br>
+						<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2313/type/18">
+									杏奈との絆を深めて限定SRをGET!
+							</a>
+						</div>
+
+				</div>
+							<div class="menu-area">
+			<ul>
+				<li class="menu-group">
+					<ul id="work-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/livebattle" id="g-menu-livebattle"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/ranking" id="g-menu-ranking"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/ula" id="g-menu-ula"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="card-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/deck" id="g-menu-deck"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/cardinventory" id="g-menu-cardinventory"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/album" id="g-menu-album"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/potential_skill" id="g-menu-potential-skill"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/cardholder" id="g-menu-cardfolder"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/wantlist" id="g-menu-wantlist"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="idol-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/unit" id="g-menu-unit"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/idol" id="g-menu-idol"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/audio_room" id="g-menu-audioroom"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/convention_center" id="g-menu-convention"></a></li>
+						<li><a id="g-menu-shortstory" href="http://imas.gree-apps.net/app/index.php/short_story"></a></li>
+						<li><a id="g-menu-theater" href="http://imas.gree-apps.net/app/index.php/theater"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="item-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/present" id="g-menu-present"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/shop" id="g-menu-shop"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/item" id="g-menu-item"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/exchange" id="g-menu-exchange"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="friend-menu-caption" class="menu-caption">
+						<li><a href="http://imas.gree-apps.net/app/index.php/friend" id="g-menu-friend"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/mypage/mydata" id="g-menu-mydata"></a></li>
+													<li><a href="http://imas.gree-apps.net/app/index.php/invite" id="g-menu-invite"></a></li>
+												<li><a href="http://imas.gree-apps.net/app/index.php/lounge" id="g-menu-lounge"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/trade" id="g-menu-trade"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/bazaar" id="g-menu-bazaar"></a></li>
+					</ul>
+				</li>
+				<li class="menu-group">
+					<ul id="other-menu-caption" class="menu-caption">
+						<li>
+															<a href="http://pf.gree.net/58737" target="_top" id="g-menu-toppage"></a>
+													</li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/help" id="g-menu-help"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/title" id="g-menu-title"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/memories" id="g-menu-memories"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/voice_drama/top" id="g-menu-voice"></a></li>
+						<li><a href="http://imas.gree-apps.net/app/index.php/config" id="g-menu-setting"></a></li>
+					</ul>
+				</li>
+			</ul>
+			<!--
+		<div id="work-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+							<a href="http://imas.gree-apps.net/app/index.php/fes" id="g-menu-fes"></a>
+						<a href="http://imas.gree-apps.net/app/index.php/auditionbattle" id="g-menu-auditionbattle"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/ranking" id="g-menu-ranking"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="card-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/deck" id="g-menu-deck"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/cardinventory" id="g-menu-cardinventory"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/album" id="g-menu-album"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="idol-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/unit" id="g-menu-unit"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/idol" id="g-menu-idol"></a>
+			
+		</div>
+		<div class="line-s2"></div>
+		<div id="item-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/present" id="g-menu-present"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/shop" id="g-menu-shop"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/item" id="g-menu-item"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="friend-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+			<a href="http://imas.gree-apps.net/app/index.php/friend" id="g-menu-friend"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/mypage/mydata" id="g-menu-mydata"></a>
+							<a href="http://imas.gree-apps.net/app/index.php/invite" id="g-menu-invite"></a>
+						<a href="http://imas.gree-apps.net/app/index.php/lounge" id="g-menu-lounge"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/trade" id="g-menu-trade"></a>
+		</div>
+		<div class="line-s2"></div>
+		<div id="other-menu-caption" class="menu-caption"></div>
+		<div class="menu-group">
+							<a href="http://pf.gree.net/58737" target="_top" id="g-menu-toppage"></a>
+						<a href="http://imas.gree-apps.net/app/index.php/help" id="g-menu-help"></a>
+			<a href="http://imas.gree-apps.net/app/index.php/title" id="g-menu-title"></a>
+		</div>
+-->
+		</div>
+	</div>
+
+
+	<!-- slide-menu -->
+	<script type="text/javascript">
+		var flag = false;
+		document.getElementById("toggle-btn").addEventListener("click", function () {
+			flag = !flag;
+			if (flag) {
+				document.getElementById("slide-menu").className = "open";
+			} else {
+				document.getElementById("slide-menu").className = "";
+			}
+		});
+	</script>
+
+
+		<div style="position: relative;">
+	<div class="livebattle-caption">ライブバトル</div>
+
+<div id="livebattle">
+
+	<div class="livebattle-reload"></div>
+	<div class="livebattle">
+	<ul class="tab-flex tab-first-category">
+		<li class="tab-item tab-base hoverable livebattle-list-tab disabled">
+			ラウンジ
+			
+		</li>
+		<li class="tab-item tab-base hoverable livebattle-list-tab disabled">
+			イベント
+			
+		</li>
+		<li class="tab-item tab-base hoverable livebattle-list-tab is-active">
+			開催中
+			<span class="livebattle-list-badge">1</span>
+		</li>
+		<li class="tab-item tab-base hoverable livebattle-list-tab disabled">
+			終了
+			
+		</li>
+	</ul>
+	<section class="livebattle-section livebattle-section-own">
+		<div class="line-s1"></div>
+		<!--<li class="" v-for="battle in battles.own">-->
+		<!--</li>-->
+		<ul class="list-bg">
+			<li>
+	<div class="line-s1"></div>
+	<section class="livebattle-list-item">
+		<div class="livebattle-list-item-head">
+			<h1>所恵美</h1>
+			<ul class="livebattle-badges">
+				<li class="livebattle-badges-item">
+					<img src="./livebattle_rarefes_files/4497ec7f68fcd45e2aa2dfae379549b4fbf2f25de4a45e53e966cdd9a9a6401e">
+				</li>
+			</ul>
+		</div>
+		<div class="livebattle-list-item-body">
+			<div class="livebattle-list-item-body-thumbnail">
+				<img class="livebattle-thumbnail-background" src="./livebattle_rarefes_files/ca8e3ba5e9823dffb79eb9f96adeb62e7d160d7eb076019fe45232cb4f591877">
+				
+				
+				
+				<ul class="livebattle-badges">
+					
+					<li class="livebattle-badges-item">
+						<img src="./livebattle_rarefes_files/87388eb6a92cbf9c7113634748ac9f93d156e4abb91917a4856ac1cfeab1d9b9">
+					</li>
+				</ul>
+				
+				<ul class="livebattle-level">
+					
+					
+					
+					
+				</ul>
+			</div>
+			<div class="livebattle-list-item-body-user ">
+				<a class="user-list-anchor" href="http://imas.gree-apps.net/app/index.php/mypage/user_profile/id/1300000000000013172">
+					<img width="48" class="leftimg user-thumbnail-size user-62082989" src="./livebattle_rarefes_files/f33145ad9b53289e728214f2eea356728611e7b43f29776e72fdc72b64bdc82cf61c6052699f9707ef86855c90f9d83ca993abdcd412616f6a8c4a51479287f0">
+					
+				</a>
+			</div>
+			<div class="livebattle-list-item-body-detail">
+				<p class="txt-sub2 s-pb"><a href="http://imas.gree-apps.net/app/index.php/mypage/user_profile/id/1300000000000013172">Mr.アナドレン</a></p>
+				<div>
+					<dl class="dl-horizontal font-small">
+						<dt class="font-mini">終了まで</dt>
+						<dd class="txt-ngtv">00:28:04</dd>
+						<dt class="font-mini">参加人数</dt>
+						<dd class="font-mini">3</dd>
+					</dl>
+				</div>
+				
+			</div>
+		</div>
+		<div class="livebattle-list-item-footer">
+			<div class="list-item-body-left">
+				<div>
+					<div class="gauge s-mt" style="width:112px">
+						<div class="vtg" style="width: 43.387%;"></div>
+					</div>
+				</div>
+				<div>
+					<span class="txt-sub2">HP&nbsp;</span>
+					<span>264,661</span>
+					/
+					<span>610,000</span>
+				</div>
+			</div>
+			<div class="livebattle-list-item-footer-btn base-btn">
+				<a style="min-width:90px;margin-top:0;margin-bottom:7px;" href="http://imas.gree-apps.net/app/index.php/livebattle/join_invited_live_battle/400000000002584211">
+					<span>
+						参加する
+					</span>
+					
+				</a>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</section>
+</li>
+		</ul>
+		
+		<div class="line-s1"></div>
+	</section>
+	<section class="livebattle-section  livebattle-section-lounge" style="display: none;">
+		
+		
+		
+		
+		
+		<div class="line-s1"></div>
+		<div class="dark-bg">
+			<div class="txt-center pd-all">
+				現在開催中の<br>
+				ライブバトルはありません
+			</div>
+		</div>
+		
+		<div class="line-s1"></div>
+	</section>
+	<section class="livebattle-section  livebattle-section-event" style="display: none;">
+		
+		
+		
+		<div class="line-s1"></div>
+		<div class="dark-bg">
+			
+			
+			
+			
+		</div>
+		
+		
+		
+		
+
+		<div class="dark-bg">
+			<div class="txt-center pd-all">
+				現在開催中の<br>
+				ライブバトルはありません
+			</div>
+			<div class="CenterBtn">
+				<div class="base-btn"><a style="min-width:154px;" href="http://imas.gree-apps.net/app/index.php/livebattle">イベント営業へ</a></div>
+			</div>
+		</div>
+		
+		<div class="line-s1"></div>
+	</section>
+	<section class="livebattle-section livebattle-section-finish" style="display: none;">
+		<div class="line-s1"></div>
+		<div class="dark-bg">
+			<div class="txt-center pd-all">
+				終了したライブバトルの結果は<br>
+				すべて確認済みです
+			</div>
+			<div class="CenterBtn">
+				<div class="base-btn">
+					<a style="min-width:134px" href="http://imas.gree-apps.net/app/index.php/present">プレゼントBOXへ</a>
+				</div>
+			</div>
+		</div>
+		
+		<div class="line-s1"></div>
+		<div class="txt-center">
+			<p class="pd-all font-mini">
+				8時間以上経過すると<br>
+				プレゼントBOXに送られます<br>
+			</p>
+			<p class="pd-all font-mini">
+				※一部アイテムについては、<br>
+				直接所持数に加算されます
+			</p>
+		</div>
+	</section>
+</div>
+	<div style="display: none;">
+		<div class="loader action-loading">
+			<ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+		</div>
+	</div>
+
+	
+</div>
+</div>
+
+
+
+
+	<div class="dark-bg">
+									
+
+	
+	<div class="banner-area">
+		
+					<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2157/type/24"><img src="./livebattle_rarefes_files/1e4492b2f9669b9684258877f3056bbded1b972ab14e52829270d2895a3b9f37ad4bb12160d43be8b2a06aa05902340dfe1eb1945981ef80a439a2af3ef2fad5" width="280"></a><br>
+						<a href="http://imas.gree-apps.net/app/index.php/banner/pass/id/2157/type/24">
+									ライブくじはこちら
+							</a>
+						</div>
+
+						</div>
+
+
+
+
+    
+<a href="http://imas.gree-apps.net/app/index.php/livebattle#wrapper" class="js-mv-id mv-id mt"><img src="./livebattle_rarefes_files/e4f71985efb653fb760fd54e204afe2513e36a37352693c1bfd329c22f494638" width="320" height="43" alt="ページTOPへ"></a>
+
+<!-- main-menu -->
+<nav class="main-menu">
+	<ul>
+		<li><a href="http://imas.gree-apps.net/app/index.php/mypage" class="nav-my-page">マイページ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/eigyo" class="nav-eigyo">営業</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/lesson" class="nav-lesson">レッスン</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/gasha" class="nav-gasha">ガシャ</a></li>
+		<li><a href="http://imas.gree-apps.net/app/index.php/event" class="nav-event">イベント</a></li>
+					<li><a href="http://pf.gree.net/58737" target="_top" class="nav-top"></a></li>
+			</ul>
+</nav>
+<!-- /main-menu -->
+
+
+<!-- footer -->
+<footer>
+	<p><small>©窪岡俊之 ©2013 BANDAI NAMCO Entertainment Inc.<br>©BNEI／PROJECT iM@S</small></p>
+</footer>
+<!-- /footer -->
+
+<!-- debug -->
+<!-- /debug -->
+
+
+</div> <!-- /main-bg -->
+</div> <!-- wrapper -->
+</div> <!-- gree-app-container -->
+
+
+<script type="text/javascript" src="./livebattle_rarefes_files/c97d5d8391318e2729c2feb6e8f9b82d"></script>
+
+			<script type="text/javascript" src="./livebattle_rarefes_files/gree.min.js"></script>
+	<script type="text/javascript">
+	GREE.init({
+		app_id: '58737',
+				enableHeader: true,
+				enableFooter: true			});
+	$(document).ready(function(){
+		if (window.pageYOffset === 0) {
+			window.scrollTo(0, 1);
+		}
+	});
+</script>
+
+
+
+
+
+<script type="text/javascript" src="./livebattle_rarefes_files/d1427b19f571e9c72220cd7119eb8e2a496375fe86925598d2ddeb72176b4215"></script>
+
+	<script type="text/javascript" src="./livebattle_rarefes_files/948e4002ccee81b7852f51249c76dce93e8433f311d1322a8d7e1c32013bc36f"></script>
+	<script type="text/javascript">
+		if ('addEventListener' in document) {
+			document.addEventListener('DOMContentLoaded', function() {
+				FastClick.attach(document.body);
+			}, false);
+		}
+	</script>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	
+	var formInputClicked = false;
+	var onClickFormInput = function(){
+		//1クリック目
+		if(formInputClicked==false){
+			formInputClicked = true;
+		}
+		else{
+			$('form input[type=submit]').attr("disabled", "disabled");
+		}
+	};
+
+	</script>
+
+	<script type="text/javascript" src="./livebattle_rarefes_files/673ac548753a53c8d0c215daa586ab5b9dcb1f5e40f6c4360631d0b19174c255"></script>
+		<script>
+		var App = Vue.extend({
+			data: function () {
+				return {
+					baseUrl: 'http://imas.gree-apps.net/app/index.php',
+					initialSelectTab: '',
+					isRaid: false,
+					isPvp: false,
+					isAppointmentCampaign: false,
+					isUla: false,
+					isLive: false				}
+			}
+		});
+
+		var supportClickStart , supportClickEnd;
+		if ((("createTouch" in document) || ("ontouchstart" in document)) && navigator.userAgent.indexOf("Android 3.2") == -1) {
+			supportClickStart = 'touchstart';
+			supportClickEnd = 'touchend';
+		} else {
+			supportClickStart = 'mousedown';
+			supportClickEnd = 'mouseup';
+		}
+
+		$('#livebattle').on(supportClickStart, '.hoverable, .base-btn a, .left-arrow a' , function(){
+
+			$(this).addClass('hover');
+
+		}).on(supportClickEnd, '.hoverable, .base-btn a, .left-arrow a', function() {
+
+			$(this).removeClass('hover');
+
+		});
+	</script>
+
+	<script type="text/javascript" src="./livebattle_rarefes_files/be17696d69bef128863f7e7d1f8bf848583a9d29e0835f8419d496c34463a8c1"></script>
+
+
+
+
+<div id="gree-pf-container"><div class="greepf-footer-container"><div class="_gpf-glContr _gpf-staticNavFoot"><div class="_gpf-contWrap"><div class="_gpf-contr"><div class="_gpf-unit"><div class="_gpf-cst _gpf-hasSpaceFat" id="gpf-coin"><div class="_gpf-flex" onclick="location.href=&quot;http://payment.gree.net/?from_ggpfooter=coin_58737&amp;backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Flivebattle&quot;"><div class="_gpf-itm"><div class="_gpf-lead">GREEコインをためる</div></div><div class="_gpf-itmCaret"><span class="_gpf-spr _gpf-ia18_arw_r"></span></div></div></div><div class="_gpf-cst _gpf-hasSpaceFat" id="gpf-invite"><div class="_gpf-flex" onclick="GREE.ui({method:&quot;invite&quot;, view:&quot;invite_dialog&quot;})"><div class="_gpf-itm"><div class="_gpf-lead">GREEの友だちを誘う</div></div><div class="_gpf-itmCaret"><span class="_gpf-spr _gpf-ia18_arw_r"></span></div></div></div></div><div class="_gpf-unit _gpf-taC _gpf-space15" id="gpf-misc"><a class="_gpf-lnk _gpf-spaceR10" href="http://apps.gree.net/gd/app/info/setting/view/58737?backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Flivebattle" id="gpf-misc-settings">アプリ設定</a><a class="_gpf-lnk _gpf-spaceR10" href="http://apps.gree.net/gd/app/info/58737?backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Flivebattle" id="gpf-misc-help">規約・ヘルプ</a><a class="_gpf-lnk" href="http://help.gree.net/?action=app_form&amp;app_id=58737&amp;backto=http%3A%2F%2Fpf.gree.net%2F58737%3Furl%3Dhttp%253A%252F%252Fimas.gree-apps.net%252Fapp%252Findex.php%252Flivebattle" id="gpf-misc-contact">お問い合わせ</a></div><div class="_gpf-unit _gpf-space15"><div class="_gpf-flex" id="gpf-banner"><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/22/2222/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/2222?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/40/60140/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/60140?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/93/66393/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/66393?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/59/60759/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/60759?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div><div class="_gpf-wrapIco48 _gpf-taC"><div class="_gpf-ico48 _gpf-app " style="background-image:url(http://aimg-m.gree.net/img/application/thumbnail/47/66147/p78.jpg)"><a class="_gpf-ico48" href="http://apps.gree.net/66147?app_code=GWAAR000002&amp;from_ggpfooter=web_58737"></a></div></div></div></div><div class="_gpf-unit _gpf-taC"><a class="_gpf-lnk" href="http://games.gree.net/?action=preopen_app_top&amp;app_id=66408&amp;from_ggpfooter=campaign_58737">人気PCゲーム!スマホで登場!10000C貰える!?</a></div><div class="_gpf-unit _gpf-taC"><a class="_gpf-lnk" href="http://games.gree.net/static/page/gekiatsufes/c2?from_ggpfooter=campaign_58737">この夏限定！お買い得情報をチェック★</a></div></div></div><div class="_gpf-navFootWrap _gpf-static"><div class="_gpf-navFoot"><div class="_gpf-contr"><div class="_gpf-flex"><div class="_gpf-itm" id="gpf-tab-top"><a class="_gpf-in" href="http://games.gree.net/?from_ggpfooter=tab_top_58737_noiframe"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_top"></span><div class="_gpf-txt">トップ</div></div></a></div><div class="_gpf-itm" id="gpf-tab-mygame"><a class="_gpf-in" href="http://games.gree.net/?action=myapp_list&amp;from_ggpfooter=tab_myapp_58737_noiframe"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_game"></span><div class="_gpf-txt">マイゲーム</div></div></a></div><div class="_gpf-itm" id="gpf-tab-search"><a class="_gpf-in" href="http://games.gree.net/search/?from_ggpfooter=tab_apps_58737_noiframe"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_search"></span><div class="_gpf-txt">ゲーム検索</div></div></a></div><div class="_gpf-itm" id="gpf-tab-chat"><a class="_gpf-in" href="http://apps.gree.net/?action=app_chat_view#view=game_list&amp;"><div class="_gpf-in"><span class="_gpf-spr _gpf-ia24_gnav_chat"></span><div class="_gpf-txt">チャット</div></div></a></div><div class="_gpf-itm" id="gpf-tab-recommend"><a class="_gpf-in" href="http://apps.gree.net/66421?from_ggpfooter=gamefootermenu_58737_ann_66421_1_36770&amp;app_code=GFOME000002"><div class="_gpf-in"><div class="_gpf-ico33 _gpf-tap" style="background-image:url(http://aimg-static.gree.net/img/announce/20a170c45c9adee4aafc692e261bb614480.jpg)"></div><span class="_gpf-ntfBadge _gpf-skOrange _gpf-fsT _gpf-last">HOT</span></div></a></div></div></div></div></div></div></div><iframe id="gree_rpc" name="gree_rpc" src="./livebattle_rarefes_files/gree_rpc.html" style="border: 0px; margin: 0px; display: block; width: 0px; height: 0px;"></iframe></div></body><autoscroll></autoscroll></html>

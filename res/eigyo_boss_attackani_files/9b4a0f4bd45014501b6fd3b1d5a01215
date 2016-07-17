@@ -1,0 +1,407 @@
+var exportRoot, images, loader, dataUrlRemain, stage = false;
+var touchX, touchY, canvasZoom, targetZoom = 1;
+var _root = {};
+
+var redirectTo = function (url) {
+	location.assign(url);
+};
+
+if (!Function.prototype.bind) {
+	Function.prototype.bind = function (oThis) {
+		if (typeof this !== "function") {
+			throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+		}
+		var aArgs = Array.prototype.slice.call(arguments, 1),
+			fToBind = this,
+			fNOP = function () {
+			},
+			fBound = function () {
+				return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
+			};
+		fNOP.prototype = this.prototype;
+		fBound.prototype = new fNOP();
+		return fBound;
+	};
+}
+
+String.prototype.toArray = function () {
+	for (var a = [], b = 0, c = this.length; b < c; b++) {
+		a.push(this.charAt(b))
+	}
+	return a
+};
+
+createjs.DisplayObject.prototype.nominalCache = function (smooth) {
+	var n = this.nominalBounds;
+	if (!!n) {
+		this.bmpCache(n.x, n.y, n.width, n.height, smooth);
+	}
+};
+
+createjs.DisplayObject.prototype.bmpCache = function (x, y, w, h, smooth) {
+	var cv, bmp, p = this.__proto__;
+	if (!p || !p.imasCacheCanvas) {
+		createjs.DisplayObject.prototype.cacheSmoothing = !!smooth;
+		this.cache(x, y, w, h);
+		cv = this.cacheCanvas;
+		if (p) {
+			p.imasCacheCanvas = cv;
+		}
+		this.uncache();
+	} else {
+		cv = p.imasCacheCanvas;
+	}
+
+	try {
+		bmp = new createjs.Bitmap(cv);
+		bmp.setTransform(x, y);
+		this.removeAllChildren();
+		this.addChild(bmp);
+	} catch (e) {}
+};
+
+createjs.Container.prototype._hitTestGlobal = function (x, y) {
+	var gp = this.localToGlobal(0, 0);
+	var hitX = gp.x + this.nominalBounds.x * this.scaleX * targetZoom;
+	var hitY = gp.y + this.nominalBounds.y * this.scaleY * targetZoom;
+	var hitW = this.nominalBounds.width * this.scaleX * targetZoom;
+	var hitH = this.nominalBounds.height * this.scaleY * targetZoom;
+	return (hitX <= x && x <= hitX + hitW && hitY <= y && y <= hitY + hitH);
+};
+
+createjs.Container.prototype.hitTestGlobal = function (x0, y0, x1, y1) {
+	var f = this._hitTestGlobal(x0, y0);
+	if (x1 != void 0 && y1 != void 0) {
+		f &= this._hitTestGlobal(x1, y1);
+	}
+	return f;
+};
+
+createjs.Text.prototype._drawText = function (a) {
+	var e = !!a, d, h;
+	e || (a = this._getWorkingContext());
+	for (var j = String(this.text).split(/(?:\r\n|\r|\n)/), k = this.lineHeight || this.getMeasuredLineHeight(), c = 0, f = 0, n = j.length; f < n; f++) {
+		var g = a.measureText(j[f]).width;
+		if (null == this.lineWidth || g < this.lineWidth) {
+			e && this._drawTextLine(a, j[f], c * k)
+		} else {
+			for (var g = j[f].toArray(), b = g[0], l = 1, p = g.length; l < p; l++) {
+				if (d = g[l], a.measureText(b + d).width > this.lineWidth) {
+					var m = 0;
+					for (h = !1; 18 > m && !h; m++) {
+						h = d == ",.\uff64\uff61)\uff63\uff9e\uff9f!?\uff0c\uff0e\u3001\u3002\uff09\u300d\u300f\u3011"[m]
+					}
+					h ? (e && this._drawTextLine(a, b + d, c * k), b = "") : (e && this._drawTextLine(a, b, c * k), b = d);
+					c++
+				} else {
+					b += d
+				}
+			}
+			e && this._drawTextLine(a, b, c * k)
+		}
+		c++
+	}
+	return c
+};
+
+function loadHandler() {
+	dataUrlRemain--;
+	if (dataUrlRemain == 0) {
+		handleComplete();
+	}
+}
+
+function resizeCanvas() {
+	var canvas = $('#canvas');
+	var ua = navigator.userAgent;
+	if (true || ua.indexOf('iPhone') >= 0 || ua.indexOf('iPad') >= 0 || ua.indexOf('iPod') >= 0 || ua.indexOf('Android') >= 0) {
+		var deviceWidth, deviceHeight;
+		if (ua.indexOf('iPhone') >= 0 || ua.indexOf('iPod') >= 0 || ua.indexOf('iPad') >= 0) {
+			deviceWidth = window.innerWidth;
+			deviceHeight = window.innerHeight;
+		} else if (ua.indexOf('Android 3') >= 0) {
+			deviceWidth = screen.width;
+			deviceHeight = screen.height;
+		} else {
+			deviceWidth = $(window).width();
+			if (deviceWidth > 480) {
+				deviceWidth = screen.width;
+			}
+			if (deviceWidth > 480) {
+				deviceWidth = window.innerWidth;
+			}
+			deviceHeight = deviceWidth * $(window).height() / $(window).width();
+		}
+
+		if (ua.indexOf('Android 4.0') >= 0 || ua.indexOf('Android 3') >= 0 || ua.indexOf('Android 2') >= 0) {
+			targetZoom = 0.5;
+		}
+		var resolution = window.localStorage['IMAS.movieResolutionRatio'];
+		if (typeof resolution !== 'undefined') {
+			targetZoom = parseFloat(resolution, 10);
+		}
+
+		var zoomRatio;
+		if (deviceWidth / deviceHeight < 640 / 832) {
+			zoomRatio = deviceWidth / 640;
+		} else {
+			zoomRatio = deviceHeight / 832;
+		}
+
+		canvas.css("zoom", zoomRatio / targetZoom).attr("width", 640 * targetZoom).attr("height", 832 * targetZoom);
+	} else {
+		canvas.css("zoom", 1 / targetZoom).attr("width", 640 * targetZoom).attr("height", 832 * targetZoom);
+	}
+
+	canvasZoom = canvas.css("zoom") * $("html").css("zoom");
+}
+
+function init() {
+	_root.windowW = $(window).width();
+	_root.windowH = $(window).height();
+	_root.screenW = screen.width;
+	_root.screenH = screen.height;
+	_root.innerW = window.innerWidth;
+	_root.innerH = window.innerHeight;
+
+	$(window).bind("orientationchange resize", resizeCanvas);
+	resizeCanvas();
+
+	loader = new createjs.LoadQueue(false);
+	loader.setMaxConnections(6);
+	images = {};
+
+	var manifest = [];
+	var dataUrl = [];
+	for (key in imageArray) {
+		if (imageArray.hasOwnProperty(key)) {
+			if (imageArray[key] == null) {
+				continue;
+			}
+			if (typeof imageArray[key] == "object") {
+				manifest.push({src: imageArray[key].src, id: key, type: imageArray[key].type});
+			} else if (imageArray[key].indexOf('data:image/') >= 0) {
+				dataUrl.push({key: key, data: imageArray[key]});
+			} else if (imageArray[key].length > 0) {
+				manifest.push({src: imageArray[key], id: key, type: "image"});
+			}
+		}
+	}
+
+	dataUrlRemain = dataUrl.length;
+	for (var i = 0, len = dataUrlRemain; i < len; i++) {
+		var img = new Image();
+		img.onload = loadHandler;
+		img.src = dataUrl[i].data;
+		images[dataUrl[i].key] = img;
+	}
+
+	if (manifest.length > 0) {
+		loader.addEventListener("fileload", handleFileLoad);
+		loader.addEventListener("complete", handleComplete);
+		loader.loadManifest(manifest);
+	} else {
+		loader.progress = 1;
+		handleComplete();
+	}
+
+	if (!createjs.DisplayObject.prototype.updateCache_Origin) {
+		createjs.DisplayObject.prototype.updateCache_Origin = createjs.DisplayObject.prototype.updateCache;
+		createjs.DisplayObject.prototype.updateCache = function (a) {
+			var ctx = this.cacheCanvas.getContext("2d");
+			ctx.imageSmoothingEnabled = ctx.webkitImageSmoothingEnabled = !!createjs.DisplayObject.prototype.cacheSmoothing;
+			this.updateCache_Origin(a);
+		}
+	}
+}
+
+function handleFileLoad(o) {
+	if (o.item.type == "image") {
+		images[o.item.id] = o.result;
+	} else if (o.item.type == "json") {
+		_root[o.item.id] = o.rawResult;
+	}
+}
+
+function handleComplete() {
+	if (loader.progress >= 1.0 && dataUrlRemain == 0) {
+		$("div#loading-ani").remove();
+		var canvas = document.getElementById("canvas");
+		if ((("createTouch" in document) || ("ontouchstart" in document)) && navigator.userAgent.indexOf("Android 3.2") == -1) {
+			canvas.addEventListener("touchstart", handleTouchStart, false);
+			canvas.addEventListener("touchend", handleTouchEnd, false);
+			canvas.addEventListener("touchcancel", handleTouchCancel, false);
+		} else {
+			canvas.addEventListener("mousedown", handleTouchStart, false);
+			canvas.addEventListener("mouseup", handleTouchEnd, false);
+		}
+		resizeCanvas();
+		loadRoot();
+
+		if (stage === false) {
+			stage = new createjs.Stage(canvas);
+			stage.autoClear = false;
+			stage.clear = function () {
+			};
+			stage.onTick = function () {
+				var ctx = this.canvas.getContext("2d");
+				ctx.imageSmoothingEnabled = ctx.webkitImageSmoothingEnabled = true;
+			};
+		}
+		stage.addChild(exportRoot);
+
+		var tick = createjs.Ticker;
+		tick.useRAF = !imas.Webview;
+		tick.setFPS(30);
+		tick.addListener(stage);
+		if (typeof _root.printFps === "function") {
+			tick.addListener(_root.printFps);
+		}
+	}
+}
+
+function handleTouchStart(e) {
+	e.preventDefault();
+
+	var x = 0, y = 0;
+	if (e.type === "touchstart") {
+		x = e.changedTouches[0].pageX;
+		y = e.changedTouches[0].pageY;
+	} else {
+		x = e.pageX;
+		y = e.pageY;
+	}
+	if (canvasZoom > 0) {
+		x /= canvasZoom;
+		y /= canvasZoom;
+	}
+	var canvas = $('#canvas');
+	x -= canvas.offset().left;
+	y -= canvas.offset().top;
+
+	if (typeof _root == "object" && typeof _root.touchEvent == "function") {
+		_root.touchEvent(x, y);
+	}
+
+	if (typeof exportRoot == "object" && typeof exportRoot.skip_mc == "object") {
+		exportRoot.skip_mc.gotoAndPlay("skip");
+	}
+
+	touchX = x;
+	touchY = y;
+}
+
+function handleTouchEnd(e) {
+	e.preventDefault();
+
+	var x = 0, y = 0;
+	if (e.type === "touchend") {
+		x = e.changedTouches[0].pageX;
+		y = e.changedTouches[0].pageY;
+	} else {
+		x = e.pageX;
+		y = e.pageY;
+	}
+	if (canvasZoom > 0) {
+		x /= canvasZoom;
+		y /= canvasZoom;
+	}
+	var canvas = $('#canvas');
+	x -= canvas.offset().left;
+	y -= canvas.offset().top;
+
+	if (typeof _root == "object" && typeof _root.touchEndEvent == "function") {
+		_root.touchEndEvent(x, y, touchX, touchY);
+	}
+}
+
+function handleTouchCancel(e) {
+	e.preventDefault();
+
+	touchX = touchY = void 0;
+
+	if (typeof _root == "object") {
+		if (typeof _root.touchCancelEvent == "function") {
+			_root.touchCancelEvent();
+		} else if (typeof _root.touchEndEvent == "function") {
+			_root.touchEndEvent();
+		}
+	}
+}
+
+function unLoadRoot() {
+	stage.removeChild(exportRoot);
+	delete exportRoot;
+}
+
+function loadRoot() {
+	console.log('loadRoot');
+	window[method](lib = lib || {}, images = images || {}, createjs = createjs || {});
+	exportRoot = new lib[method]();
+	exportRoot.setTransform(0, 0, targetZoom, targetZoom);
+}
+
+var imas = window.imas || {};
+imas.flash = {
+	request: function (params, callback) {
+		var method = params['method'] || 'POST';
+		var url = params['path'] || '/';
+		var data = params;
+		var dataType = params['dataType'] || 'json';
+		var baseUrl = _root.base_url;
+		url = baseUrl + _root.livebattle_path + params["action"] + "/" + _root.livebattle_id;
+		$.ajax({
+			type: method,
+			dataType: dataType,
+			url: url,
+			data: data
+		}).done(function (data) {
+			//console.log("imas.req success", data);
+			callback(data);
+		}).fail(function (err) {
+			//console.log("err",err);
+			var tmp = '<div id="popup-item" style="width:100%;height:100%;background-color:rgba(0,0,0,0.5);z-index:5000;position: absolute;top: 0;left:0;text-align: center;padding: 10px;display: block;">' +
+				'<div id="fit-win" class="" style="top:0;display: block;position: static;margin-top:150px">' +
+				'<div class="warn">エラーが発生しました</div>' +
+				'<div class="CenterBtn"><div class="MainBtn">' +
+				'<a href="' + _root.detail_url + '">もどる</a>' +
+				'</div></div>' +
+				'</div>' +
+				'</div>';
+			$("body").prepend(tmp);
+		});
+	},
+	initSound: function () {
+		if (typeof _root === "undefined") {
+			return;
+		}
+		if (typeof _root.blank_url === "undefined") {
+			return;
+		}
+		if (_root.enableSound == 0) {
+			return;
+		}
+		var sound = new Howl({
+			urls: [_root.blank_url],
+			autoplay: true,
+		});
+	},
+	play: function (path) {
+		if (_root.enableSound == 0) {
+			return;
+		}
+		// console.log("play");
+		if (!path)return;
+		var sound = new Howl({
+			urls: [path],
+			autoplay: true,
+		});
+	}
+};
+
+
+imas.Util = {
+	numberFormat: function (num) {
+		return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+	}
+};

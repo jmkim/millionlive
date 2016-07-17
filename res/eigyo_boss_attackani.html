@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)http://imas.gree-apps.net/app/index.php/eigyo/battle/372? -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
+<title>ｱｲﾄﾞﾙﾏｽﾀｰ ﾐﾘｵﾝﾗｲﾌﾞ!</title>
+<style type="text/css">
+*{ -webkit-tap-highlight-color: rgba(0,0,0,0) !important; }
+body { margin: 0; padding: 0;}
+</style>
+	
+    <link rel="stylesheet" href="./eigyo_boss_attackani_files/2a496d537c616659bdb2da9cf6b7646ae1758f68b8d92b163c3550a6713789b1" media="screen">
+
+		<link rel="stylesheet" href="./eigyo_boss_attackani_files/67746bc05cb56b6364bc53cea16f81d2a6cb466e55a60cef62a4e2c1c6f6f221" media="screen">
+<link rel="apple-touch-icon-precomposed" href="http://cdn.bn765.com/66b/764e6fa42f542a827f9906f3368544af8b0240ab87555553935418bdab94dc5c?ccea7c4d7810724ac3b608ccab5e6802">
+<link rel="shortcut icon" href="http://cdn.bn765.com/a2c/aa5c89f6a409ee3fea6affbdb9218df15c783ce9fa6e3da6ccdcf78f578a0380?3ab584d93f830b73b66f97dd28ba426a">
+<link id="greepf_css" type="text/css" rel="stylesheet" href="./eigyo_boss_attackani_files/gree_spa.css"><script charset="UTF-8" src="./eigyo_boss_attackani_files/message.js"></script></head>
+
+<body style="background-color:#000">
+<div id="gree-app-container">
+
+
+<div id="flash-container">
+
+
+
+<canvas id="canvas" height="832" style="margin: auto; zoom: 0.5; background-color: rgb(0, 0, 0);" width="640"></canvas>
+</div>
+	<div id="main-container" style="display: none">
+		<div id="wrapper"></div>
+	</div>
+<script type="text/javascript" async="" src="./eigyo_boss_attackani_files/ga.js"></script><script src="./eigyo_boss_attackani_files/jquery.min.js"></script>
+<script src="./eigyo_boss_attackani_files/598e56bff714e205e4e65d7be1aad3e5e545efb8efc60168d7f2b95e01177b38"></script>
+
+
+			<script type="text/javascript" src="./eigyo_boss_attackani_files/gree.min.js"></script>
+	<script type="text/javascript">
+	GREE.init({
+		app_id: '58737',
+				enableHeader: false,
+				enableFooter: false			});
+	$(document).ready(function(){
+		if (window.pageYOffset === 0) {
+			window.scrollTo(0, 1);
+		}
+	});
+</script>
+
+<script src="./eigyo_boss_attackani_files/9b4a0f4bd45014501b6fd3b1d5a01215"></script>
+<script src="./eigyo_boss_attackani_files/911b0eb67e33e6a0174b1f9a6a6956b0"></script>
+
+
+<script>
+var imas = imas || {};
+imas.g_voice = null;
+imas.g_sound_play_img = "http://cdn.bn765.com/3cb/2a508eecead41624b69b863e9ac2709a2bb6892a979ffd542814544dbbdec808?b89a6f7c8588835e39e4deb8d3b10e32";
+imas.g_sound_stop_img = "http://cdn.bn765.com/475/61575b3542de59cfffc38df1c02bfbd555088474be267ac510a1f853f36522f0?c0353191c612375461c1bf902f88e8e3";
+
+imas.SendLog = function(path) {
+	if (path) {
+		$.post(
+			'http://imas.gree-apps.net/app/index.php/voice/req',
+			{
+				'url': 'eigyo/battle',
+				'path': path
+			}
+		);
+	}
+};
+
+imas.PlaySoundByPath = function( path, callback ) {
+	if (imas.g_voice) {
+		imas.g_voice.stop();
+	} else {
+		imas.g_voice = new imas.Voice();
+	}
+
+	if ( path ) {
+		imas.g_voice.load( path );
+		imas.g_voice.play( callback );
+
+		$.post(
+			'http://imas.gree-apps.net/app/index.php/voice/req',
+			{
+				'url': 'eigyo/battle',
+				'path': path
+			}
+		);
+	}
+};
+imas.StopSound = function() {
+	if ( imas.g_voice && imas.g_voice.isPlaying() ) {
+		imas.g_voice.stop();
+	}
+	imas.g_voice = null;
+};
+
+imas.IsPlaying = function() {
+	if ( imas.g_voice == null ) {
+		return false;
+	}
+
+	return imas.g_voice.isPlaying();
+};
+imas.GetPlayingPath = function() {
+	if ( imas.g_voice == null ) {
+		return null;
+	}
+
+	return imas.g_voice.src();
+}
+
+$(document).ready(function() {
+	var supportClickStart , supportClickEnd;
+	if ((("createTouch" in document) || ("ontouchstart" in document)) && navigator.userAgent.indexOf("Android 3.2") == -1) {
+		supportClickStart = 'touchstart';
+		supportClickEnd = 'touchend';
+	} else {
+		supportClickStart = 'mousedown';
+		supportClickEnd = 'mouseup';
+	}
+
+	var changeImage = function( path, is_play_img ) {
+		$('.idol-sound').each( function() {
+			var inputs = $(this).children('input');
+			if ( inputs.length == 0 )
+				return;
+
+			input_path = inputs[0].value;
+			if ( input_path == path ) {
+				var img = $(this).children('img');
+				if ( is_play_img ) {
+					img.attr( 'src', imas.g_sound_play_img );
+				}
+				else {
+					img.attr( 'src', imas.g_sound_stop_img );
+				}
+			}
+		});
+	};
+
+	$('.idol-sound').on(supportClickStart, function() {
+					if( !imas.SoundVolume.voice.isVolumeState() ){
+				
+				$(this).children('img').not(':animated').animate({
+					opacity: ".3"
+				}, 500).animate({
+					opacity: "1"
+				}, 500);
+				return;
+			}
+		
+		var inputs = $(this).children( 'input' );
+		if ( inputs.length == 0 ) return;
+		var click_path = inputs[0].value;
+
+		var is_play = false;
+		if ( imas.IsPlaying() ) {
+			var now_path = imas.GetPlayingPath();
+			if ( now_path == click_path ) {
+				changeImage( now_path, true );
+
+				imas.StopSound();
+			}
+			else {
+				$('.idol-sound>img').each( function() {
+					$(this).attr( 'src', imas.g_sound_play_img );
+				});
+
+				is_play = true;
+			}
+		}
+		else {
+			is_play = true;
+		}
+
+		if ( is_play === true ) {
+			changeImage( click_path, false );
+
+			imas.PlaySoundByPath( click_path, function() {
+				changeImage( click_path, true );
+			});
+		}
+	});
+
+	var caravanChangeImage = function( path, is_play_img ) {
+		$('.caravan-idol-sound').each( function() {
+			var inputs = $(this).children('input');
+			if ( inputs.length == 0 )
+				return;
+
+			input_path = inputs[0].value;
+			if ( input_path == path ) {
+				var img = $(this).children('img');
+				if ( is_play_img ) {
+					img.attr( 'src', imas.g_sound_play_img );
+				}
+				else {
+					img.attr( 'src', imas.g_sound_stop_img );
+				}
+			}
+		});
+	};
+
+	$('.caravan-idol-sound').on(supportClickStart, function() {
+		if( !imas.SoundVolume.voice.isVolumeState() ){
+			
+			$(this).children('img').not(':animated').animate({
+				opacity: ".3"
+			}, 500).animate({
+				opacity: "1"
+			}, 500);
+			return;
+		}
+
+		var inputs = $(this).children( 'input' );
+		if ( inputs.length == 0 ) return;
+		var click_path = inputs[0].value;
+
+		var is_play = false;
+		if ( imas.IsPlaying() ) {
+			var now_path = imas.GetPlayingPath();
+			if ( now_path == click_path ) {
+				caravanChangeImage( now_path, true );
+
+				imas.StopSound();
+			}
+			else {
+				$('.caravan-idol-sound>img').each( function() {
+					$(this).attr( 'src', imas.g_sound_play_img );
+				});
+
+				is_play = true;
+			}
+		}
+		else {
+			is_play = true;
+		}
+
+		if ( is_play === true ) {
+			caravanChangeImage( click_path, false );
+
+			$.post(
+				'http://imas.gree-apps.net/app/index.php/caravan/voice_read',
+				{
+					'mode': 401,
+					'voice_id': $(this).data('id')
+				}
+			);
+
+			imas.PlaySoundByPath( click_path, function() {
+				caravanChangeImage( click_path, true );
+			});
+		}
+	});
+});
+</script>
+
+<script>
+	$(document).ready(function () {
+		init();
+	});
+</script>
+
+<script type="text/javascript" src="./eigyo_boss_attackani_files/d1427b19f571e9c72220cd7119eb8e2a496375fe86925598d2ddeb72176b4215"></script>
+
+<script type="text/javascript" src="./eigyo_boss_attackani_files/5d237d4cec351dc4fd479ab92721909524f92af3ebd85697c540c49e9d11431a"></script>
+<script>
+	imas.SoundVolume.init(
+			{
+				voice: "0",
+				webview_se: "",
+				webview_bgm: "",
+				webview_bgm_volume: ""
+			}
+	);
+</script>
+	
+
+<script src="./eigyo_boss_attackani_files/f820882962175f83c7ada8f516f13bde3fa05d372a1c3b536f788091137d2a21"></script>
+<script>
+	
+var imageArray={
+	img_back:"http://cdn.bn765.com/8da/f820882962175f83c7ada8f516f13bde8d66b38e3c6614d6a18a481d1c61de4aaf3522310145a9c93fdb532f7530f187?aa4bcf244640066504d92e52adbeb895",
+	WinBg:"http://cdn.bn765.com/e8c/f820882962175f83c7ada8f516f13bde29e84e3a34033d1a6ec513cf9ea3b8ed0c053dcec3232f6535cc07b2d51b664f?0f31aac37804935a6ff1c0370b195342",
+	spritesheet0:"http://cdn.bn765.com/989/f820882962175f83c7ada8f516f13bde8625f6a70718167db09ebdcc341522d388bc986a94b56afac135af60408f4489?5120a4f50c9700cba474a4436a00ff41",
+	spritesheet1:"http://cdn.bn765.com/cd7/f820882962175f83c7ada8f516f13bde8625f6a70718167db09ebdcc341522d3e74bc6480c8c9e934dd6f13020e9cac2?42c4699809ad545bd70b18a31ec5d4d3",
+	spritesheet2:"http://cdn.bn765.com/bdc/f820882962175f83c7ada8f516f13bde8625f6a70718167db09ebdcc341522d37f70cf60c7d2b9746d4e8b9d37540655?19043c810af1467a1d49ce8ab2ce2d93",
+};
+
+
+	var method = "bus_battle";
+
+	if (!window.imageArray) {
+		imageArray = {};
+	}
+		imageArray.card0 = "http://cdn.bn765.com/bb9/448d1f7a06330f5feef17cec589fbcdcc0e2722e46a0a7f08a7a882dae119e02?c1bf585a1058b97f3d930a7a7bfa628e";
+		imageArray.card3 = "http://cdn.bn765.com/26e/4259bfad43803c5e22d73473066068b08f12f550d2712233e7d217a9e00d143923cb215f8c038e1ae7a2999bb48a6152?c9cfc8c1562964aa7fb7e8090e06852f";
+		imageArray.card6 = "http://cdn.bn765.com/40b/4259bfad43803c5e22d73473066068b08b7a94d4fe6a118e928b5831d5900dc81a8ceac30f8840561e5f7b3f7579bbc1?3c2a97a61c82473733306abb05b5f550";
+		imageArray.card8 = "http://cdn.bn765.com/2d3/55a01e34aac1485a80c95a222487181a3c60e29e5d2daf8b2570fd6e558e1ebcbee42207dd20c3bd5de545da34f8de21?d1488df64c4fa8345933f86da8ef908b";
+		imageArray.card7 = "http://cdn.bn765.com/dd6/29f2d9298b36029420fdc67eca427bfea6d6f09a1ee2932caa8f70c120307b9c?c4de452d377a79e4be83cab7cd1df77a";
+	
+	_root.mypage_url = "http://imas.gree-apps.net/app/index.php/mypage";
+
+		_root.mission = "お仕事対決";
+		_root.cost = "424";
+		_root.cost_gain = "1";
+		_root.text = "お仕事が完了しました。\r\nデッキコストが1上がりました。(424→425)\r\n";
+		_root.result = "0";
+		_root.tlengh = "1";
+		_root.card_num = "1";
+		_root.talk0 = "765ﾌﾟﾛ-､ﾌｧｲﾄ-!!";
+		_root.talk1 = "";
+		_root.talk2 = "";
+		_root.talk3 = "そりゃー!真美見参だよーっ!!";
+		_root.enm_level = "1";
+		_root.enm_name = "双海真美";
+		_root.enm_skil = "skill";
+		_root.hp3 = "4500";
+		_root.turn_len = "1";
+		_root.next_url = "http://imas.gree-apps.net/app/index.php/eigyo/battle_result/win/372";
+		_root.hp0 = "7144";
+		_root.i0 = "0";
+		_root.a0 = "6595";
+	
+	
+	
+</script>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<div id="gree-pf-container"></div></body><autoscroll></autoscroll></html>

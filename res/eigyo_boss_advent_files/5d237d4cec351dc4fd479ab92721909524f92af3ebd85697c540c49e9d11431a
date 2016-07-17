@@ -1,0 +1,72 @@
+var imas = window.imas || {};
+(function (imas) {
+    imas.SoundVolume = {};
+    imas.SoundVolume = {
+        sound_volume_data: {
+            voice: '',
+            webview_se: '',
+            webview_bgm: '',
+            webview_bgm_volume: ''
+        },
+        init: function(sound_volume_data) {
+            this.sound_volume_data = sound_volume_data;
+        },
+        voice: {
+            storage_name: 'IMAS.voiceVolumeState',
+            isVolumeState: function() {
+                if(imas.SoundVolume.sound_volume_data.voice){
+                    if(imas.SoundVolume.sound_volume_data.voice === '0'){
+                        return false;
+                    }
+                }else{
+                    if( localStorage.getItem(this.storage_name) === 'false' ) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        },
+        webviewSe: {
+            storage_name: 'IMAS.webviewSeVolumeState',
+            isVolumeState: function() {
+                if(imas.SoundVolume.sound_volume_data.webview_se){
+                    if(imas.SoundVolume.sound_volume_data.webview_se === '0'){
+                        return false;
+                    }
+                }else{
+                    if( localStorage.getItem(this.storage_name) === 'false' ){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        },
+        webviewBGM: {
+            storage_name: 'IMAS.webviewBgmVolumeState',
+            isVolumeState: function() {
+                if(imas.SoundVolume.sound_volume_data.webview_bgm){
+                    if(imas.SoundVolume.sound_volume_data.webview_bgm === '0') {
+                        return false;
+                    }
+                }else{
+                    if( localStorage.getItem(this.storage_name) === 'false' ){
+                        return false;
+                    }
+                }
+                return true;
+            },
+
+            volume_storage_name: 'IMAS.webviewBgmVolume',
+            getVolume: function(){
+                if(imas.SoundVolume.sound_volume_data.webview_bgm_volume){
+                    return imas.SoundVolume.sound_volume_data.webview_bgm_volume / 100;
+                }else{
+                    if( localStorage.getItem(this.volume_storage_name) !== null ) {
+                        return localStorage.getItem(this.volume_storage_name);
+                    }
+                }
+                return 0.5;
+            }
+        }
+    };
+})(imas);

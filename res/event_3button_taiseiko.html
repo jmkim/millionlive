@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)http://imas.gree-apps.net/app/index.php/flash/play/id/plesson_result -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
+<title>ｱｲﾄﾞﾙﾏｽﾀｰ ﾐﾘｵﾝﾗｲﾌﾞ!</title>
+<style type="text/css">
+*{ -webkit-tap-highlight-color: rgba(0,0,0,0) !important; }
+body { margin: 0; padding: 0;}
+</style>
+	
+    <link rel="stylesheet" href="./event_3button_taiseiko_files/2a496d537c616659bdb2da9cf6b7646ae1758f68b8d92b163c3550a6713789b1" media="screen">
+
+		<link rel="stylesheet" href="./event_3button_taiseiko_files/67746bc05cb56b6364bc53cea16f81d2a6cb466e55a60cef62a4e2c1c6f6f221" media="screen">
+<link rel="apple-touch-icon-precomposed" href="http://cdn.bn765.com/66b/764e6fa42f542a827f9906f3368544af8b0240ab87555553935418bdab94dc5c?ccea7c4d7810724ac3b608ccab5e6802">
+<link rel="shortcut icon" href="http://cdn.bn765.com/a2c/aa5c89f6a409ee3fea6affbdb9218df15c783ce9fa6e3da6ccdcf78f578a0380?3ab584d93f830b73b66f97dd28ba426a">
+<link id="greepf_css" type="text/css" rel="stylesheet" href="./event_3button_taiseiko_files/gree_spa.css"><script charset="UTF-8" src="./event_3button_taiseiko_files/message.js"></script></head>
+
+<body style="background-color:#000">
+<div id="gree-app-container">
+
+
+<div id="flash-container">
+
+
+
+<canvas id="canvas" height="832" style="margin: auto; zoom: 0.5; background-color: rgb(0, 0, 0);" width="640"></canvas>
+</div>
+	<div id="main-container" style="display: none">
+		<div id="wrapper"></div>
+	</div>
+<script type="text/javascript" async="" src="./event_3button_taiseiko_files/ga.js"></script><script src="./event_3button_taiseiko_files/jquery.min.js"></script>
+<script src="./event_3button_taiseiko_files/598e56bff714e205e4e65d7be1aad3e5e545efb8efc60168d7f2b95e01177b38"></script>
+
+
+			<script type="text/javascript" src="./event_3button_taiseiko_files/gree.min.js"></script>
+	<script type="text/javascript">
+	GREE.init({
+		app_id: '58737',
+				enableHeader: false,
+				enableFooter: false			});
+	$(document).ready(function(){
+		if (window.pageYOffset === 0) {
+			window.scrollTo(0, 1);
+		}
+	});
+</script>
+
+<script src="./event_3button_taiseiko_files/9b4a0f4bd45014501b6fd3b1d5a01215"></script>
+<script src="./event_3button_taiseiko_files/911b0eb67e33e6a0174b1f9a6a6956b0"></script>
+
+
+<script>
+var imas = imas || {};
+imas.g_voice = null;
+imas.g_sound_play_img = "http://cdn.bn765.com/3cb/2a508eecead41624b69b863e9ac2709a2bb6892a979ffd542814544dbbdec808?b89a6f7c8588835e39e4deb8d3b10e32";
+imas.g_sound_stop_img = "http://cdn.bn765.com/475/61575b3542de59cfffc38df1c02bfbd555088474be267ac510a1f853f36522f0?c0353191c612375461c1bf902f88e8e3";
+
+imas.SendLog = function(path) {
+	if (path) {
+		$.post(
+			'http://imas.gree-apps.net/app/index.php/voice/req',
+			{
+				'url': 'flash/play',
+				'path': path
+			}
+		);
+	}
+};
+
+imas.PlaySoundByPath = function( path, callback ) {
+	if (imas.g_voice) {
+		imas.g_voice.stop();
+	} else {
+		imas.g_voice = new imas.Voice();
+	}
+
+	if ( path ) {
+		imas.g_voice.load( path );
+		imas.g_voice.play( callback );
+
+		$.post(
+			'http://imas.gree-apps.net/app/index.php/voice/req',
+			{
+				'url': 'flash/play',
+				'path': path
+			}
+		);
+	}
+};
+imas.StopSound = function() {
+	if ( imas.g_voice && imas.g_voice.isPlaying() ) {
+		imas.g_voice.stop();
+	}
+	imas.g_voice = null;
+};
+
+imas.IsPlaying = function() {
+	if ( imas.g_voice == null ) {
+		return false;
+	}
+
+	return imas.g_voice.isPlaying();
+};
+imas.GetPlayingPath = function() {
+	if ( imas.g_voice == null ) {
+		return null;
+	}
+
+	return imas.g_voice.src();
+}
+
+$(document).ready(function() {
+	var supportClickStart , supportClickEnd;
+	if ((("createTouch" in document) || ("ontouchstart" in document)) && navigator.userAgent.indexOf("Android 3.2") == -1) {
+		supportClickStart = 'touchstart';
+		supportClickEnd = 'touchend';
+	} else {
+		supportClickStart = 'mousedown';
+		supportClickEnd = 'mouseup';
+	}
+
+	var changeImage = function( path, is_play_img ) {
+		$('.idol-sound').each( function() {
+			var inputs = $(this).children('input');
+			if ( inputs.length == 0 )
+				return;
+
+			input_path = inputs[0].value;
+			if ( input_path == path ) {
+				var img = $(this).children('img');
+				if ( is_play_img ) {
+					img.attr( 'src', imas.g_sound_play_img );
+				}
+				else {
+					img.attr( 'src', imas.g_sound_stop_img );
+				}
+			}
+		});
+	};
+
+	$('.idol-sound').on(supportClickStart, function() {
+					if( !imas.SoundVolume.voice.isVolumeState() ){
+				
+				$(this).children('img').not(':animated').animate({
+					opacity: ".3"
+				}, 500).animate({
+					opacity: "1"
+				}, 500);
+				return;
+			}
+		
+		var inputs = $(this).children( 'input' );
+		if ( inputs.length == 0 ) return;
+		var click_path = inputs[0].value;
+
+		var is_play = false;
+		if ( imas.IsPlaying() ) {
+			var now_path = imas.GetPlayingPath();
+			if ( now_path == click_path ) {
+				changeImage( now_path, true );
+
+				imas.StopSound();
+			}
+			else {
+				$('.idol-sound>img').each( function() {
+					$(this).attr( 'src', imas.g_sound_play_img );
+				});
+
+				is_play = true;
+			}
+		}
+		else {
+			is_play = true;
+		}
+
+		if ( is_play === true ) {
+			changeImage( click_path, false );
+
+			imas.PlaySoundByPath( click_path, function() {
+				changeImage( click_path, true );
+			});
+		}
+	});
+
+	var caravanChangeImage = function( path, is_play_img ) {
+		$('.caravan-idol-sound').each( function() {
+			var inputs = $(this).children('input');
+			if ( inputs.length == 0 )
+				return;
+
+			input_path = inputs[0].value;
+			if ( input_path == path ) {
+				var img = $(this).children('img');
+				if ( is_play_img ) {
+					img.attr( 'src', imas.g_sound_play_img );
+				}
+				else {
+					img.attr( 'src', imas.g_sound_stop_img );
+				}
+			}
+		});
+	};
+
+	$('.caravan-idol-sound').on(supportClickStart, function() {
+		if( !imas.SoundVolume.voice.isVolumeState() ){
+			
+			$(this).children('img').not(':animated').animate({
+				opacity: ".3"
+			}, 500).animate({
+				opacity: "1"
+			}, 500);
+			return;
+		}
+
+		var inputs = $(this).children( 'input' );
+		if ( inputs.length == 0 ) return;
+		var click_path = inputs[0].value;
+
+		var is_play = false;
+		if ( imas.IsPlaying() ) {
+			var now_path = imas.GetPlayingPath();
+			if ( now_path == click_path ) {
+				caravanChangeImage( now_path, true );
+
+				imas.StopSound();
+			}
+			else {
+				$('.caravan-idol-sound>img').each( function() {
+					$(this).attr( 'src', imas.g_sound_play_img );
+				});
+
+				is_play = true;
+			}
+		}
+		else {
+			is_play = true;
+		}
+
+		if ( is_play === true ) {
+			caravanChangeImage( click_path, false );
+
+			$.post(
+				'http://imas.gree-apps.net/app/index.php/caravan/voice_read',
+				{
+					'mode': 401,
+					'voice_id': $(this).data('id')
+				}
+			);
+
+			imas.PlaySoundByPath( click_path, function() {
+				caravanChangeImage( click_path, true );
+			});
+		}
+	});
+});
+</script>
+
+<script>
+	$(document).ready(function () {
+		init();
+	});
+</script>
+
+<script type="text/javascript" src="./event_3button_taiseiko_files/d1427b19f571e9c72220cd7119eb8e2a496375fe86925598d2ddeb72176b4215"></script>
+
+<script type="text/javascript" src="./event_3button_taiseiko_files/5d237d4cec351dc4fd479ab92721909524f92af3ebd85697c540c49e9d11431a"></script>
+<script>
+	imas.SoundVolume.init(
+			{
+				voice: "0",
+				webview_se: "",
+				webview_bgm: "",
+				webview_bgm_volume: ""
+			}
+	);
+</script>
+	
+<script src="./event_3button_taiseiko_files/5caaca37a734b4a0e9058e9542f161353a2c8dbe73e6092a10d323407ff5fa41"></script>
+<script>
+	Howler.iOSAutoEnable = true;
+</script>
+<script src="./event_3button_taiseiko_files/e8ffec6ee869c587401ee43023e4e7afc98476feadb3ec055312d7111d84c3783d79b417920c914bd75e481cad68078b"></script>
+<script>
+	var imageArray={
+	back:"http://cdn.bn765.com/2ed/e8ffec6ee869c587401ee43023e4e7af1f16f02e48484d0cdad7291a4eba1143361fe0241783300ea9bdf8ba1b116ed7?833851bee25beb8abd3db577b9887836",
+	spritesheet0:"http://cdn.bn765.com/bdd/e8ffec6ee869c587401ee43023e4e7afed83a35add0929df68f9df136c019e51c2b26805857387a87fff656c97a6c380?3b26095473090fbd02acc71fbf998685",
+	bar0:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAYCAIAAABMTvt6AAAAYElEQVQokYTSbQ5AMBBF0YcpjWDxlioVKu3UClz9e3L7MWmnveh7WQgD8WygsnVijsjbyDXzwhz55sWRbxqa7HqQE9cn10fmmjnz2fhsWf2p6bPIKg/VvRGrUd7T1tI7ADkmHOqWaUP7AAAAAElFTkSuQmCC",
+	bar1:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAYCAIAAABMTvt6AAAAZ0lEQVQokXzPyxGAIAwA0QAyw68WW7H/HjwqogKxApfrm02CWfdN/t/inSeONjAn4uIycbaFOBmsk4vEweDlXTrxrQ/xNRpx04r1RD4Gcp0n8av4MZXJ9SA2osST66G4G2eLJRT5BgDwHCXFWzhhpgAAAABJRU5ErkJggg==",
+	bar2:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAYCAIAAABMTvt6AAAAVklEQVQokaTO0QmAMBCD4VQD2kL3H8TZrApX2g1+Be/1I8mlcQjOWpnNXJi3jJwpbhVOu/L2jtwDOR7mE7ndyBdzNC4fyB1UFoW1EH4o/7NtJeKX1+YAQvAVDE97rnAAAAAASUVORK5CYII=",
+	bar3:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAYCAIAAABMTvt6AAAAOUlEQVQokWL87/OfATdgwiNHsTQLAzt+aU6KdPPgl2bFL/0Pv/Qv/NLfKNL9kyJpvC6naYQOYmnAAFFXCZIrFe1oAAAAAElFTkSuQmCC",
+};
+
+	var method="plesson_result";
+
+	if(!window.imageArray) {
+		imageArray = {};
+	}
+		
+			imageArray.card0 = "http://cdn.bn765.com/459/d9f919f69befcae627f998da23cb018edada3f4857c60a8869efee8bb187501a?e1aa764fea544fe9236404f896e3e977";
+			
+			imageArray.card1 = "http://cdn.bn765.com/5ab/78de482dac8ac40f1798f0a5eac0e927b9a6f229a277483545d387e56c6c46fb?bc29b970078549afe7e5d31abb542d32";
+		
+	_root.next_url = "http://imas.gree-apps.net/app/index.php/grow/private_lesson_result/1550012/180/endless";
+	        
+        		    _root.text0 = "うん､気合入ってきた!これなら勝てそうな気がする!…何に?あはっ､試合じゃなかったっけ!";
+        	        
+        		    _root.text1 = "";
+        	        
+        		    _root.result = "1";
+        	        
+        		    _root.reward = "0";
+        	        
+        		    _root.level = "38";
+        	        
+        		    _root.exp = "40";
+        	        
+        		    _root.exp_gain = "50";
+        	        
+        		    _root.text_id = "1";
+        	        
+        		    _root.text_max = "2";
+        	        
+        		    _root.faceY = "405";
+        	
+	
+		function loadRoot() {
+			window[method](lib = lib||{}, images = images||{}, createjs = createjs||{});
+			exportRoot = new lib[method]();
+			exportRoot.setTransform(0, 0, targetZoom, targetZoom);
+		}
+	
+</script>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<div id="gree-pf-container"></div></body><autoscroll></autoscroll></html>
